@@ -2,3 +2,7 @@ name: MapMarkers
 version: '${project.version}'
 main: me.lucthesloth.mapmarkers.MapMarkers
 api-version: '1.20'
+commands:
+  mapmarkers:
+    description: MapMarkers command
+    aliases: [marker, dominionmarker, dmarker]
