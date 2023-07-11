@@ -17,6 +17,9 @@ public class InteractiveMarkerProcess {
     int step = 0x0;
     public InteractiveMarkerProcess(Player player) {
         marker = new Marker();
+        marker.setX(player.getLocation().getBlockX());
+        marker.setZ(player.getLocation().getBlockZ());
+        this.setStepBit(5);
         this.player = player;
         sendInformationMessage();
     }
@@ -24,6 +27,7 @@ public class InteractiveMarkerProcess {
         marker = new Marker(player.getLocation().getBlockX(), player.getLocation().getBlockZ(), name);
         marker.setId(MarkerUtils.normalize(name));
         this.setStepBit(0);
+        this.setStepBit(5);
         this.player = player;
         sendInformationMessage();
     }
@@ -128,6 +132,7 @@ public class InteractiveMarkerProcess {
                 } else {
                     MarkerUtils.removeMarker(oldID);
                     MarkerUtils.addMarker(marker);
+                    MarkerUtils.saveMarkers();
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aMarker edited")));
                 }
                 processes.remove(player);

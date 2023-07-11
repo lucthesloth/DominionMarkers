@@ -88,6 +88,7 @@ public class MarkerCommand implements CommandExecutor {
         if (args.length == 3 && args[2].equalsIgnoreCase("confirm")){
             if (MarkerUtils.removeMarker(id)){
                 player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aMarker " + id + " has been removed"));
+                MarkerUtils.saveMarkers();
             } else {
                 player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker " + id + " could not be removed"));
             }

@@ -50,20 +50,13 @@ public class MarkerUtils {
     static @Nullable Marker markerExists(String id){
         return markers.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
-    public static boolean addMarker(Marker marker) {
+    public static void addMarker(Marker marker) {
         if (markerExists(marker.getId()) == null) {
             markers.add(marker);
-            saveMarkers();
-            return true;
         }
-        return false;
     }
     static boolean removeMarker(String id) {
-        if (markers.removeIf(marker -> marker.getId().equalsIgnoreCase(id))) {
-            saveMarkers();
-            return true;
-        }
-        return false;
+        return markers.removeIf(marker -> marker.getId().equalsIgnoreCase(id));
     }
     public static String normalize(String string){
         return string.toLowerCase().trim().replaceAll("[^A-Za-z0-9]", "");
