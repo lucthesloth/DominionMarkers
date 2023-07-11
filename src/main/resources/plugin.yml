@@ -1,0 +1,4 @@
+name: MapMarkers
+version: '${project.version}'
+main: me.lucthesloth.mapmarkers.MapMarkers
+api-version: '1.20'

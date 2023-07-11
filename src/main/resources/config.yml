@@ -1,0 +1,23 @@
+layer:
+  world_name: "world"
+  key: "default_layer_key"
+  label: "default_layer_label"
+  updateInterval: 60
+  showControls: true
+  defaultHidden: false
+  priority: 100
+  zIndex: 100
+  markerFile: "marker.json"
+
+marker:
+  pattern: "<center><b>{title}</b><br><i>{description}</i></center>"
+  default_image: "marker-icon"
+  anchor:
+    x: 16
+    z: 16
+  size:
+    x: 32
+    z: 32
+  offset:
+    x: 0
+    z: -3000
