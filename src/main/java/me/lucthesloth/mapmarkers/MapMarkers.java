@@ -32,6 +32,8 @@ public final class MapMarkers extends JavaPlugin {
         MarkerUtils.loadMarkers();
         Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
         Objects.requireNonNull(getCommand("mapmarkers")).setTabCompleter(new MarkerCommandCompleter());
+        Objects.requireNonNull(getCommand("markersmigrate")).setExecutor(new MigrateCommand());
+        Objects.requireNonNull(getCommand("markersmigrate")).setTabCompleter(new MigrateCommand.MigrateCommandCompleter());
     }
     @Override
     public void onDisable() {

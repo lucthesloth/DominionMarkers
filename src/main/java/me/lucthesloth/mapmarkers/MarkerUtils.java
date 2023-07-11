@@ -50,10 +50,12 @@ public class MarkerUtils {
     static @Nullable Marker markerExists(String id){
         return markers.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
-    public static void addMarker(Marker marker) {
+    public static boolean addMarker(Marker marker) {
         if (markerExists(marker.getId()) == null) {
             markers.add(marker);
+            return true;
         }
+        return false;
     }
     static boolean removeMarker(String id) {
         return markers.removeIf(marker -> marker.getId().equalsIgnoreCase(id));

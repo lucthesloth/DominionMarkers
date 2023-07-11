@@ -6,3 +6,6 @@ commands:
   mapmarkers:
     description: MapMarkers command
     aliases: [marker, dominionmarker, dmarker]
+  markersmigrate:
+    description: Migrate markers from old plugin
+    aliases: [mmigrate, dominionmarkersmigrate, dmigrate]
