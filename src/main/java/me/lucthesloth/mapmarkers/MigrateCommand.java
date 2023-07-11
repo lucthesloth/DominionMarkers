@@ -39,7 +39,7 @@ public class MigrateCommand implements CommandExecutor {
             try {
                 MigrateHelper helper = new Gson().fromJson(new FileReader(file), MigrateHelper.class);
                 helper.markers.forEach(marker -> {
-                    if (MarkerUtils.addMarker(new Marker(marker.data.key, (double)marker.data.point.x(), (double)marker.data.point.z(), marker.data.image,
+                    if (MarkerUtils.addMarker(new Marker(marker.data.key, marker.data.point.x, marker.data.point.z, marker.data.image,
                             marker.options.tooltip.content.split("<i>", 2)[1],
                             marker.options.tooltip.content.substring(11).split("</b>")[0])))
                         success.getAndIncrement();

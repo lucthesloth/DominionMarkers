@@ -20,12 +20,9 @@ public class ShopsLayer extends WorldLayer {
         setDefaultHidden(MapMarkers.instance.getConfig().getBoolean("layer.defaultHidden", false));
         setPriority(MapMarkers.instance.getConfig().getInt("layer.priority", 100));
         setZIndex(MapMarkers.instance.getConfig().getInt("layer.zIndex", 100));
-
-
     }
     @Override
     public @NotNull Collection<Marker<?>> getMarkers() {
-        MapMarkers.instance.getLogger().info("getMarkers() called, returned " + MarkerUtils.markers.size() + " markers");
         return MarkerUtils.markers.stream().map(me.lucthesloth.mapmarkers.Marker::getIcon).collect(Collectors.toList());
     }
 }

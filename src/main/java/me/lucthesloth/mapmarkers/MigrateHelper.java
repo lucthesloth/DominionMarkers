@@ -1,10 +1,5 @@
 package me.lucthesloth.mapmarkers;
 
-import net.pl3x.map.core.markers.Point;
-import net.pl3x.map.core.markers.marker.Icon;
-import net.pl3x.map.core.markers.marker.Marker;
-import net.pl3x.map.core.markers.option.Tooltip;
-
 import java.util.List;
 
 public class MigrateHelper {
@@ -17,7 +12,7 @@ class a {
 }
 class data {
     String key;
-    Point point;
+    point point;
     String image;
 
 }
@@ -26,4 +21,8 @@ class options {
 }
 class tooltip {
     String content;
+}
+class point {
+    double x;
+    double z;
 }
