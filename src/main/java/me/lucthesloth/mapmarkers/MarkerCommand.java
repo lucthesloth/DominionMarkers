@@ -1,6 +1,8 @@
 package me.lucthesloth.mapmarkers;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.Style;
@@ -121,7 +123,13 @@ public class MarkerCommand implements CommandExecutor {
         }
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aNearby markers:"));
         for (Marker marker : MarkerUtils.nearbyMarkers(player, radius)){
-            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§a" + marker.getName() + " §7(" + marker.getId() + ")"));
+            TextComponent.@NotNull Builder builder = Component.text();
+            builder.append(Component.text("§3[§9MapMarkers§3] §r§a" + marker.getName() + " §7(" + marker.getId() + ") "));
+            builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + marker.getId()))
+                    .hoverEvent(HoverEvent.showText(Component.text("Click to edit")))));
+            builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + marker.getId()))
+                    .hoverEvent(HoverEvent.showText(Component.text("Click to remove")))));
+            player.sendMessage(builder.build());
         }
         return false;
     }

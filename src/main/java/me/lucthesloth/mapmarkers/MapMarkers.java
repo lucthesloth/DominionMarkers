@@ -31,6 +31,7 @@ public final class MapMarkers extends JavaPlugin {
         }
         MarkerUtils.loadMarkers();
         Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
+        Objects.requireNonNull(getCommand("mapmarkers")).setTabCompleter(new MarkerCommandCompleter());
     }
     @Override
     public void onDisable() {
