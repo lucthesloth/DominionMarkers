@@ -78,21 +78,21 @@ public class MarkerCommand implements CommandExecutor {
         }
         String id = MarkerUtils.normalize(args[1]);
         if (MarkerUtils.markerExists(id) == null){
-            player.sendMessage(Component.text("§cMarker with id " + id + " does not exist"));
+            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
             return true;
         }
         if (args.length == 2){
-            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aAre you sure you want to delete marker " + id + "?")
+            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Are you sure you want to delete marker §6" + id + "§3?")
                     .style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + id + " confirm"))
                             .hoverEvent(HoverEvent.showText(Component.text("Click to confirm")))));
             return false;
         }
         if (args.length == 3 && args[2].equalsIgnoreCase("confirm")){
             if (MarkerUtils.removeMarker(id)){
-                player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aMarker " + id + " has been removed"));
+                player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Marker §6" + id + " §3has been removed"));
                 MarkerUtils.saveMarkers();
             } else {
-                player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker " + id + " could not be removed"));
+                player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker §6" + id + " §ccould not be removed"));
             }
         }
         return false;
@@ -105,7 +105,7 @@ public class MarkerCommand implements CommandExecutor {
         String id = MarkerUtils.normalize(args[1]);
         Marker marker = MarkerUtils.markerExists(id);
         if (marker == null){
-            player.sendMessage(Component.text("§cMarker with id " + id + " does not exist"));
+            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
             return true;
         }
         InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, marker));
@@ -121,10 +121,10 @@ public class MarkerCommand implements CommandExecutor {
                 return true;
             }
         }
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aNearby markers:"));
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Nearby markers:"));
         for (Marker marker : MarkerUtils.nearbyMarkers(player, radius)){
             TextComponent.@NotNull Builder builder = Component.text();
-            builder.append(Component.text("§3[§9MapMarkers§3] §r§a" + marker.getName() + " §7(" + marker.getId() + ") "));
+            builder.append(Component.text("§3[§9MapMarkers§3] §r§6" + marker.getName() + " §3(" + marker.getId() + ") "));
             builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + marker.getId()))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to edit")))));
             builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + marker.getId()))

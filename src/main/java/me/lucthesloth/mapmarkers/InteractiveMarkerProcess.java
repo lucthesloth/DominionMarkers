@@ -14,7 +14,7 @@ public class InteractiveMarkerProcess {
     Player player;
     Marker marker;
     String oldID;
-    int step = 0x0;
+    int step = 0x10;
     public InteractiveMarkerProcess(Player player) {
         marker = new Marker();
         marker.setX(player.getLocation().getBlockX());
@@ -41,17 +41,17 @@ public class InteractiveMarkerProcess {
     //Test
     public void sendInformationMessage(){
         player.sendMessage(Component.text("\n\n\n§3[§9MapMarkers§3] §r§aInteractive Marker Creation"));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aID => " + marker.getId()));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aName => " + marker.getName(),
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3ID => §6" + marker.getId()));
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Name => §6" + marker.getName(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i name "))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to change name"))).build()));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aDescription => " + marker.getDescription(),
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Description => §6" + marker.getDescription(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i desc "))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to change description"))).build()));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aIcon => " + marker.get_Icon(),
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Icon => §6" + marker.get_Icon(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i icon "))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to change icon"))).build()));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aPosition => " + marker.getX() + ", " + marker.getZ(),
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Position => §6" + marker.getX() + ", " + marker.getZ(),
                 Style.style().clickEvent(ClickEvent.runCommand("/marker i pos"))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to set position to current player position"))).build()));
         if ((step & 0x17) == 0x17 || (step >> 3 & 1) == 1){
@@ -60,20 +60,7 @@ public class InteractiveMarkerProcess {
                     .hoverEvent(HoverEvent.showText(Component.text("Click to confirm"))).build()));
         }
     }
-    public void sendMessage(){
-        if ((step & 1) == 0){
-            player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPlease enter a name for the marker")));
-            return;
-        }
-        if ((step>>1 & 1) == 0){
-            player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPlease enter a description for the marker")));
-            return;
-        }
-        if ((step>>2 & 1) == 0){
-            player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPlease enter the icon id for the marker")));
-            return;
-        }
-    }
+
     /**
      * First bit = Name set
      * Second bit = Description set
@@ -128,19 +115,19 @@ public class InteractiveMarkerProcess {
                 }
                 if (oldID == null){
                     MarkerUtils.addMarker(marker);
-                    player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aMarker created")));
+                    player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker created")));
                 } else {
                     MarkerUtils.removeMarker(oldID);
                     MarkerUtils.addMarker(marker);
                     MarkerUtils.saveMarkers();
-                    player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aMarker edited")));
+                    player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker edited")));
                 }
                 processes.remove(player);
                 break;
             case 5:
                 marker.setX(player.getLocation().getBlockX());
                 marker.setZ(player.getLocation().getBlockZ());
-                player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPosition set to " + marker.getX() + ", " + marker.getZ())));
+                player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPosition set to §3" + marker.getX() + ", " + marker.getZ())));
                 sendInformationMessage();
                 break;
             default:
