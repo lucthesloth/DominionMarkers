@@ -2,7 +2,6 @@ package me.lucthesloth.mapmarkers;
 
 import com.google.gson.Gson;
 import net.kyori.adventure.text.Component;
-import net.pl3x.map.core.markers.marker.Icon;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +15,7 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MigrateCommand implements CommandExecutor {
@@ -35,7 +35,7 @@ public class MigrateCommand implements CommandExecutor {
         if (Arrays.stream(dataFolder.list()).anyMatch(t->t.equalsIgnoreCase(strings[0]))) {
             File file = new File(dataFolder, strings[0]);
             AtomicInteger success = new AtomicInteger(0);
-            List<String> failed = Collections.synchronizedList(Arrays.asList(new String[0]));
+            List<String> failed = Collections.synchronizedList(List.of());
             try {
                 MigrateHelper helper = new Gson().fromJson(new FileReader(file), MigrateHelper.class);
                 helper.markers.forEach(marker -> {
@@ -66,7 +66,7 @@ public class MigrateCommand implements CommandExecutor {
             if (!commandSender.hasPermission("mapmarkers.migrate"))
                 return Collections.EMPTY_LIST;
             if (strings.length <= 1)
-                return Arrays.stream(dataFolder.list()).filter(t->t.contains(strings[0])).toList();
+                return Arrays.stream(Objects.requireNonNull(dataFolder.list())).filter(t->t.contains(strings[0])).toList();
             return null;
         }
     }

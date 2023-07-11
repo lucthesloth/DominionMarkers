@@ -48,7 +48,7 @@ public class InteractiveMarkerProcess {
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Description => §6" + marker.getDescription(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i desc "))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to change description"))).build()));
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Icon => §6" + marker.get_Icon(),
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Icon => §6" + marker.getIconName(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i icon "))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to change icon"))).build()));
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Position => §6" + marker.getX() + ", " + marker.getZ(),
@@ -67,16 +67,13 @@ public class InteractiveMarkerProcess {
      * Third bit = Icon set
      * Fifth bit = Edit mode
      */
-    public void resetStep(int step){
-        this.step &= ~(1 << step);
-    }
     public void setStepBit(int step){
         this.step |= (1 << step);
     }
     public void handleMessage(String message, int command){
-        switch(command) {
-            case 1:
-                if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40)){
+        switch (command) {
+            case 1 -> {
+                if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40)) {
                     marker.setName(message);
                     marker.setId(MarkerUtils.normalize(message));
                     setStepBit(0);
@@ -84,36 +81,36 @@ public class InteractiveMarkerProcess {
                 } else {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cName is too long, please enter a name for the marker (max §r§d" + MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40) + "§r§c characters)")));
                 }
-                break;
-            case 2:
-                if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_description_length", 80)){
+            }
+            case 2 -> {
+                if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_description_length", 80)) {
                     marker.setDescription(message);
                     setStepBit(1);
                     sendInformationMessage();
                 } else {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cDescription is too long, please enter a description for the marker (max §r§d" + MapMarkers.instance.getConfig().getInt("marker.max_description_length", 80) + "§r§c characters)")));
                 }
-                break;
-            case 3:
-                if (Pl3xMap.api().getIconRegistry().has(message)){
+            }
+            case 3 -> {
+                if (Pl3xMap.api().getIconRegistry().has(message)) {
                     marker.setIcon(message);
                     setStepBit(2);
                     sendInformationMessage();
                 } else {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cIcon does not exist, please enter the icon id for the marker")));
                 }
-                break;
-            case 4:
-                if (marker.getId() == null){
+            }
+            case 4 -> {
+                if (marker.getId() == null) {
                     marker.setId(MarkerUtils.normalize(marker.getName()));
                 }
                 if (marker.getName() == null || marker.getDescription() == null || marker.getIcon() == null
-                        || marker.getName().isEmpty() || marker.getDescription().isEmpty() || marker.get_Icon().isEmpty()){
+                        || marker.getName().isEmpty() || marker.getDescription().isEmpty() || marker.getIconName().isEmpty()) {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cPlease fill out all fields")));
                     sendInformationMessage();
                     return;
                 }
-                if (oldID == null){
+                if (oldID == null) {
                     MarkerUtils.addMarker(marker);
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker created")));
                 } else {
@@ -123,15 +120,15 @@ public class InteractiveMarkerProcess {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker edited")));
                 }
                 processes.remove(player);
-                break;
-            case 5:
+            }
+            case 5 -> {
                 marker.setX(player.getLocation().getBlockX());
                 marker.setZ(player.getLocation().getBlockZ());
                 player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§aPosition set to §3" + marker.getX() + ", " + marker.getZ())));
                 sendInformationMessage();
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 

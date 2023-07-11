@@ -1,7 +1,5 @@
 package me.lucthesloth.mapmarkers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
@@ -63,12 +61,6 @@ public class Marker {
         }
         return _icon;
     }
-    public String toGson(){
-        return new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().setLenient().create().toJson(this);
-    }
-    public Marker fromGson(String json){
-        return new Gson().fromJson(json, Marker.class);
-    }
 
     //getters and setters
     public String getId() {
@@ -83,9 +75,7 @@ public class Marker {
     public double getZ() {
         return z;
     }
-    public String getIconName() {
-        return icon;
-    }
+
     public String getDescription() {
         return description;
     }
@@ -112,7 +102,7 @@ public class Marker {
         this.description = description;
         _icon = null;
     }
-    public String get_Icon(){
+    public String getIconName(){
         return icon;
     }
 

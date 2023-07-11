@@ -74,6 +74,7 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <!--suppress UnresolvedMavenProperty -->
         <finalName>${project.artifactId}-${project.version}-${git.commit.id.abbrev}</finalName>
     </build>
 

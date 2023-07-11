@@ -1,7 +1,6 @@
 package me.lucthesloth.mapmarkers;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -17,11 +16,10 @@ public class MarkerCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!commandSender.hasPermission("mapmarkers.marker"))
             return true;
-        if (!(commandSender instanceof Player)){
+        if (!(commandSender instanceof Player player)){
             commandSender.sendMessage(Component.text("§cOnly players can use this command"));
             return true;
         }
-        Player player = (Player) commandSender;
         if (args.length == 0) {
             commandSender.sendMessage(Component.text("§cUsage: /marker <add|remove|edit|exit> <args...>"));
             return true;
@@ -29,7 +27,7 @@ public class MarkerCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("remove"))
             return followRemoveChain(player, args);
         if (args[0].equalsIgnoreCase("exit"))
-            return followExitChain(player, args);
+            return followExitChain(player);
         if (args[0].equalsIgnoreCase("add"))
             return followAddChain(player, args);
         if (args[0].equalsIgnoreCase("edit"))
@@ -40,7 +38,7 @@ public class MarkerCommand implements CommandExecutor {
             return followNearbyChain(player, args);
         return false;
     }
-    private boolean followExitChain(@NotNull Player player, @NotNull String @NotNull [] args){
+    private boolean followExitChain(@NotNull Player player){
         if (!InteractiveMarkerProcess.processes.containsKey(player)){
             player.sendMessage(Component.text("§cYou are not in a marker creation process"));
             return true;
