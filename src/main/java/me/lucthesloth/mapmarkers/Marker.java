@@ -13,18 +13,19 @@ import net.pl3x.map.core.markers.option.Tooltip;
 public class Marker {
 
     @Expose
-    private String id;
+    private String id = "";
     @Expose
-    private String name;
+    private String name = "";
     @Expose
-    private double x;
+    private double x = 0;
     @Expose
-    private double z;
+    private double z = 0;
     @Expose
-    private String icon;
+    private String icon = "";
     @Expose
-    private String description;
+    private String description = "";
     private Icon _icon;
+    public Marker(){}
     public Marker(String id, double x, double z, String icon, String description, String name) {
         this.id = id;
         this.x = x;
@@ -98,6 +99,21 @@ public class Marker {
     public void setX(double x) {
         this.x = x;
         _icon = null;
+    }
+    public void setZ(double z) {
+        this.z = z;
+        _icon = null;
+    }
+    public void setIcon(String icon) {
+        this.icon = icon;
+        _icon = null;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+        _icon = null;
+    }
+    public String get_Icon(){
+        return icon;
     }
 
 }

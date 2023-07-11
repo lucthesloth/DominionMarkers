@@ -1,20 +1,11 @@
 package me.lucthesloth.mapmarkers;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.markers.layer.SimpleLayer;
-import net.pl3x.map.core.markers.marker.Icon;
-import net.pl3x.map.core.markers.option.Options;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 
 public final class MapMarkers extends JavaPlugin {
@@ -39,6 +30,7 @@ public final class MapMarkers extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
         MarkerUtils.loadMarkers();
+        Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
     }
     @Override
     public void onDisable() {

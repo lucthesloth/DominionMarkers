@@ -80,14 +80,14 @@ public class MarkerCommand implements CommandExecutor {
             return true;
         }
         if (args.length == 2){
-            player.sendMessage(Component.text("§a§l[MapMarkers] §r§aAre you sure you want to delete marker " + id + "?")
+            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aAre you sure you want to delete marker " + id + "?")
                     .style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + id + " confirm"))
                             .hoverEvent(HoverEvent.showText(Component.text("Click to confirm")))));
             return false;
         }
         if (args.length == 3 && args[2].equalsIgnoreCase("confirm")){
             if (MarkerUtils.removeMarker(id)){
-                player.sendMessage(Component.text("§a§l[MapMarkers] §r§aMarker " + id + " has been removed"));
+                player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aMarker " + id + " has been removed"));
             } else {
                 player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker " + id + " could not be removed"));
             }
@@ -118,27 +118,50 @@ public class MarkerCommand implements CommandExecutor {
                 return true;
             }
         }
-        player.sendMessage(Component.text("§a§l[MapMarkers] §r§aNearby markers:"));
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§aNearby markers:"));
         for (Marker marker : MarkerUtils.nearbyMarkers(player, radius)){
-            player.sendMessage(Component.text("§a§l[MapMarkers] §r§a" + marker.getName() + " §7(" + marker.getId() + ")"));
+            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§a" + marker.getName() + " §7(" + marker.getId() + ")"));
         }
         return false;
     }
     private boolean followInternalChain(@NotNull Player player, @NotNull String @NotNull [] args){
-        if (args.length == 1) return true;
+        if (args.length <= 1) return true;
         InteractiveMarkerProcess process = InteractiveMarkerProcess.processes.get(player);
         if (process == null){
             player.sendMessage(Component.text("§cYou are not in a marker creation process"));
             return true;
         }
+        if (args[1].equalsIgnoreCase("confirm")){
+            process.handleMessage("", 4);
+            return false;
+        }
+        if (args[1].equalsIgnoreCase("pos")){
+            process.handleMessage("", 5);
+            return false;
+        }
         StringBuilder builder = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
+        for (int i = 2; i < args.length; i++) {
             builder.append(args[i]);
             if (i != args.length - 1)
                 builder.append(" ");
         }
         String BuiltArgument = builder.toString();
-        process.handleMessage(BuiltArgument);
+        if (BuiltArgument.trim().length() < 1){
+            player.sendMessage(Component.text("§cUsage: /marker i <command> <...args>"));
+            return true;
+        }
+        if (args[1].equalsIgnoreCase("name")){
+            process.handleMessage(BuiltArgument, 1);
+            return false;
+        }
+        if (args[1].equalsIgnoreCase("desc")){
+            process.handleMessage(BuiltArgument, 2);
+            return false;
+        }
+        if (args[1].equalsIgnoreCase("icon")){
+            process.handleMessage(BuiltArgument, 3);
+            return false;
+        }
         return false;
     }
 }
