@@ -34,7 +34,8 @@ public class MarkerCommand implements CommandExecutor {
             return followEditChain(player, args);
         if (args[0].equalsIgnoreCase("i"))
             return followInternalChain(player, args);
-
+        if (args[0].equalsIgnoreCase("nearby"))
+            return followNearbyChain(player, args);
         return false;
     }
     private boolean followExitChain(@NotNull Player player, @NotNull String @NotNull [] args){
@@ -105,6 +106,22 @@ public class MarkerCommand implements CommandExecutor {
             return true;
         }
         InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, marker));
+        return false;
+    }
+    private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
+        Integer radius = null;
+        if (args.length == 2){
+            try {
+                radius = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ignored){
+                player.sendMessage(Component.text("§cUsage: /marker nearby <radius>"));
+                return true;
+            }
+        }
+        player.sendMessage(Component.text("§a§l[MapMarkers] §r§aNearby markers:"));
+        for (Marker marker : MarkerUtils.nearbyMarkers(player, radius)){
+            player.sendMessage(Component.text("§a§l[MapMarkers] §r§a" + marker.getName() + " §7(" + marker.getId() + ")"));
+        }
         return false;
     }
     private boolean followInternalChain(@NotNull Player player, @NotNull String @NotNull [] args){

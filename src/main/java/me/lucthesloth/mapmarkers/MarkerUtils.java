@@ -2,6 +2,7 @@ package me.lucthesloth.mapmarkers;
 
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -9,6 +10,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MarkerUtils {
     public static Gson markerGson;
@@ -56,5 +59,19 @@ public class MarkerUtils {
     }
     public static String normalize(String string){
         return string.toLowerCase().trim().replaceAll("[^A-Za-z0-9]", "");
+    }
+    public static List<Marker> nearbyMarkers(Player p, @Nullable Integer radius) {
+        if (!p.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world")))
+            return Collections.EMPTY_LIST;
+        List<Marker> nearbyMarkers = new ArrayList<>();
+        for (Marker marker : markers) {
+            if (distance(marker.getX(), marker.getZ(), p.getLocation().getBlockX(), p.getLocation().getBlockZ()) <= (radius != null ? radius : MapMarkers.instance.getConfig().getInt("layer.nearbyRadius", 10))) {
+                nearbyMarkers.add(marker);
+            }
+        }
+        return nearbyMarkers;
+    }
+    public static int distance(double x0, double z0, int x1, int z1){
+        return (int) Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(z1 - z0, 2));
     }
 }

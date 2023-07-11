@@ -8,9 +8,11 @@ layer:
   priority: 100
   zIndex: 100
   markerFile: "marker.json"
-
+  nearbyRadius: 10
 marker:
   pattern: "<center><b>{title}</b><br><i>{description}</i></center>"
+  max_name_length: 40
+  max_desc_length: 100
   default_image: "marker-icon"
   anchor:
     x: 16
