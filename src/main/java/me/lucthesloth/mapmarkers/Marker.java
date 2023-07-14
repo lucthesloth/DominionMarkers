@@ -7,6 +7,7 @@ import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.markers.marker.Icon;
 import net.pl3x.map.core.markers.option.Options;
+import net.pl3x.map.core.markers.option.Popup;
 import net.pl3x.map.core.markers.option.Tooltip;
 
 import java.io.File;
@@ -49,15 +50,15 @@ public class Marker {
             _icon = net.pl3x.map.core.markers.marker.Marker.icon(id, x, z, icon);
             Options.Builder options = Options.builder();
             options.tooltipOpacity(1.0);
-            options.popup(null);
+            options.popupContent(MapMarkers.instance.getConfig().getString("marker.pattern", "<center><b>{title}</b><br><i>{description}</i></center>").replace("{title}", name)
+                    .replace("{description}", description));
             options.popupShouldAutoClose(true);
             options.popupShouldAutoPan(false);
             options.tooltipContent(MapMarkers.instance.getConfig().getString("marker.pattern", "<center><b>{title}</b><br><i>{description}</i></center>").replace("{title}", name)
                     .replace("{description}", description));
-            options.tooltipOffset(Point.of(0, (z/2) * -1 - 8));
+            options.tooltipOffset(Point.of(0, -(MapMarkers.instance.getConfig().getInt("marker.size.z", 32)/4)));
             options.tooltipDirection(Tooltip.Direction.TOP);
             options.popupOffset(Point.of(MapMarkers.instance.getConfig().getInt("marker.offset.x", 0),MapMarkers.instance.getConfig().getInt("marker.offset.z", 0)));
-            _icon.setAnchor(Vector.of(MapMarkers.instance.getConfig().getInt("marker.anchor.x", 0), MapMarkers.instance.getConfig().getInt("marker.anchor.z", 0)));
             _icon.setSize(Vector.of(MapMarkers.instance.getConfig().getInt("marker.size.x", 32), MapMarkers.instance.getConfig().getInt("marker.size.z", 32)));
             _icon.setOptions(options.build());
 

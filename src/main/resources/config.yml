@@ -14,12 +14,9 @@ marker:
   max_name_length: 40
   max_desc_length: 100
   default_image: "marker-icon"
-  anchor:
-    x: 16
-    z: 16
   size:
     x: 32
     z: 32
   offset:
     x: 0
-    z: -3000
+    z: 0
