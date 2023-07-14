@@ -27,9 +27,15 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
+    - name: Copy output file to artifact
+      run: |
+        find target/ -type f -name "MapMarkers-1.0-*.jar" | while read fname; do
+          dirname=`dirname "$fname"`
+          filename=`basename "$fname"`
+          mkdir built/
+          cp "${dirname}/$filename" "built/$filename"
+        done
     - name: Publish Artifact
-      uses: actions/upload-artifact@v3
+      uses: kittaakos/upload-artifact-as-is@v0
       with:
-        name: Package
-        path: target/
+        path: built/
