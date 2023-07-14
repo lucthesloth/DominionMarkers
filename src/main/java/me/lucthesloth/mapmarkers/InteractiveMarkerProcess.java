@@ -1,6 +1,7 @@
 package me.lucthesloth.mapmarkers;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.Style;
@@ -22,6 +23,7 @@ public class InteractiveMarkerProcess {
         this.setStepBit(5);
         this.player = player;
         sendInformationMessage();
+
     }
     public InteractiveMarkerProcess(Player player, String name) {
         marker = new Marker(player.getLocation().getBlockX(), player.getLocation().getBlockZ(), name);
@@ -54,11 +56,15 @@ public class InteractiveMarkerProcess {
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Position => §6" + marker.getX() + ", " + marker.getZ(),
                 Style.style().clickEvent(ClickEvent.runCommand("/marker i pos"))
                 .hoverEvent(HoverEvent.showText(Component.text("Click to set position to current player position"))).build()));
+        TextComponent.Builder Builder = Component.text();
+        Builder.append(Component.text("§3[§9MapMarkers§3] "));
         if ((step & 0x17) == 0x17 || (step >> 3 & 1) == 1){
-            player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§cConfirm",
-                    Style.style().clickEvent(ClickEvent.runCommand("/marker i confirm"))
+            Builder.append(Component.text("§r§c[Confirm] ", Style.style().clickEvent(ClickEvent.runCommand("/marker i confirm"))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to confirm"))).build()));
         }
+        Builder.append(Component.text("§r§9[Cancel] ", Style.style().clickEvent(ClickEvent.runCommand("/marker exit"))
+                .hoverEvent(HoverEvent.showText(Component.text("Click to cancel"))).build()));
+        player.sendMessage(Builder.build());
     }
 
     /**
@@ -74,6 +80,10 @@ public class InteractiveMarkerProcess {
         switch (command) {
             case 1 -> {
                 if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40)) {
+                    if (MarkerUtils.markerExists(message) != null) {
+                        player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cMarker already exists, please enter a name for the marker")));
+                        return;
+                    }
                     marker.setName(message);
                     marker.setId(MarkerUtils.normalize(message));
                     setStepBit(0);
