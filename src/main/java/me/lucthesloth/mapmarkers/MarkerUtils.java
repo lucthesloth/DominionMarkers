@@ -80,7 +80,7 @@ public class MarkerUtils {
     }
 
     public static void forceRegisterAllIcons(){
-        File file = Pl3xMap.api().getIconRegistry().getDir().toFile();
+        File file = Pl3xMap.api().getIconRegistry().getDir().toFile().getParentFile();
         if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
