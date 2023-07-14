@@ -89,7 +89,7 @@ public class MarkerUtils {
                     if (iconFile.isFile() && iconFile.getName().endsWith(".png")) {
                         try {
                             MapMarkers.instance.getLogger().info("Registering icon " + iconFile.getName());
-                            if (Pl3xMap.api().getIconRegistry().has(iconFile.getName().replace(".png", "")))
+                            if (!Pl3xMap.api().getIconRegistry().has(iconFile.getName().replace(".png", "")))
                                 Pl3xMap.api().getIconRegistry().register(new IconImage(iconFile.getName().replace(".png", ""), ImageIO.read(iconFile), "png"));
                         } catch (IOException e) {
                             MapMarkers.instance.getLogger().warning("Failed to register icon " + iconFile.getName());
