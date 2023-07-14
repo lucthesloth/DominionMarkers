@@ -81,12 +81,14 @@ public class MarkerUtils {
 
     public static void forceRegisterAllIcons(){
         File file = Pl3xMap.api().getIconRegistry().getDir().toFile().getParentFile();
+        MapMarkers.instance.getLogger().info("Registering icons from " + file.getAbsolutePath());
         if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File iconFile : files) {
                     if (iconFile.isFile() && iconFile.getName().endsWith(".png")) {
                         try {
+                            MapMarkers.instance.getLogger().info("Registering icon " + iconFile.getName());
                             if (Pl3xMap.api().getIconRegistry().has(iconFile.getName().replace(".png", "")))
                                 Pl3xMap.api().getIconRegistry().register(new IconImage(iconFile.getName().replace(".png", ""), ImageIO.read(iconFile), "png"));
                         } catch (IOException e) {
