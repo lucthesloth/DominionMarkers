@@ -31,6 +31,7 @@ public final class MapMarkers extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        MarkerUtils.forceRegisterAllIcons();
         MarkerUtils.loadMarkers();
         Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
         Objects.requireNonNull(getCommand("mapmarkers")).setTabCompleter(new MarkerCommandCompleter());

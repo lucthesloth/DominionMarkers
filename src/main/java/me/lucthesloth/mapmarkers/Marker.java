@@ -2,11 +2,14 @@ package me.lucthesloth.mapmarkers;
 
 import com.google.gson.annotations.Expose;
 import net.pl3x.map.core.Pl3xMap;
+import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.markers.marker.Icon;
 import net.pl3x.map.core.markers.option.Options;
 import net.pl3x.map.core.markers.option.Tooltip;
+
+import java.io.File;
 
 public class Marker {
 
