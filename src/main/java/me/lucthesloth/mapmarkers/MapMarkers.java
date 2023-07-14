@@ -21,6 +21,7 @@ public final class MapMarkers extends JavaPlugin {
             this.getLogger().warning("Failed to read/create marker file");
             Bukkit.getPluginManager().disablePlugin(this);
             throw new RuntimeException(e);
+
         }
         if (getServer().getPluginManager().isPluginEnabled("Pl3xMap")) {
             getLogger().info("Found Pl3xMap. Hooking into plugin.");
@@ -28,6 +29,7 @@ public final class MapMarkers extends JavaPlugin {
         } else {
             getLogger().info("Could not find Pl3xMap. Disabling..");
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
         MarkerUtils.loadMarkers();
         Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
