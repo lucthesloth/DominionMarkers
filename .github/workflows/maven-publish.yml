@@ -38,5 +38,4 @@ jobs:
     - name: Publish Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Package
         path: built/MapMarkers.jar
