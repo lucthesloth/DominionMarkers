@@ -36,6 +36,6 @@ jobs:
           cp "${dirname}/$filename" "built/MapMarkers.jar"
         done
     - name: Publish Artifact
-      uses: actions/upload-artifact@v3
+      uses: kittaakos/upload-artifact-as-is@v0
       with:
-        path: built/MapMarkers.jar
+        path: target/
