@@ -54,7 +54,11 @@ public class MarkerUtils {
         markerFile.createNewFile();
     }
     static @Nullable Marker markerExists(String id){
-        return markers.stream().filter(marker -> marker.getId().contains(id.toLowerCase())).findFirst().orElse(null);
+        List<Marker> t =  markers.stream().filter(marker -> marker.getId().contains(id.toLowerCase())).toList();
+        Marker k = t.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
+        if (k == null)
+            k = t.stream().filter(marker -> marker.getId().startsWith(id)).findFirst().orElse(null);
+        return k;
     }
     public static boolean addMarker(Marker marker) {
         if (markerExists(marker.getId()) == null) {
