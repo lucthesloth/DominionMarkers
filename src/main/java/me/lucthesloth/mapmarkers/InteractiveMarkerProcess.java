@@ -84,7 +84,7 @@ public class InteractiveMarkerProcess {
                         player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cMarker already exists, please enter a name for the marker")));
                         return;
                     }
-                    marker.setName(message);
+                    marker.setName(message.toUpperCase());
                     marker.setId(MarkerUtils.normalize(message));
                     setStepBit(0);
                     sendInformationMessage();
@@ -111,9 +111,7 @@ public class InteractiveMarkerProcess {
                 }
             }
             case 4 -> {
-                if (marker.getId() == null) {
-                    marker.setId(MarkerUtils.normalize(marker.getName()));
-                }
+                marker.setId(MarkerUtils.normalize(marker.getName()));
                 if (marker.getName() == null || marker.getDescription() == null || marker.getIcon() == null
                         || marker.getName().isEmpty() || marker.getDescription().isEmpty() || marker.getIconName().isEmpty()) {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cPlease fill out all fields")));
@@ -126,10 +124,10 @@ public class InteractiveMarkerProcess {
                 } else {
                     MarkerUtils.removeMarker(oldID);
                     MarkerUtils.addMarker(marker);
-                    MarkerUtils.saveMarkers();
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker edited")));
                 }
                 processes.remove(player);
+                MarkerUtils.saveMarkers();
             }
             case 5 -> {
                 marker.setX(player.getLocation().getBlockX());
