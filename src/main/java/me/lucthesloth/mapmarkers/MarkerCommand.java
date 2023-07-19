@@ -17,6 +17,13 @@ public class MarkerCommand implements CommandExecutor {
     }
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("icons")) {
+            commandSender.sendMessage(Component.text("§3[§9MapMarkers§3] §r§dClick for available Icons").style(
+                    Style.style().clickEvent(ClickEvent.openUrl("https://dominionserver.net/markers/icons.html"))
+                            .hoverEvent(HoverEvent.showText(Component.text("Click to open link"))).build()
+            ));
+            return true;
+        }
         if (!commandSender.hasPermission("mapmarkers.marker"))
             return true;
         if (!(commandSender instanceof Player player)){
@@ -39,6 +46,8 @@ public class MarkerCommand implements CommandExecutor {
             return followInternalChain(player, args);
         if (args[0].equalsIgnoreCase("nearby"))
             return followNearbyChain(player, args);
+        if (args[0].equalsIgnoreCase("help"))
+            return followHelpChain(player, args);
         return false;
     }
     private boolean followExitChain(@NotNull Player player){
@@ -172,6 +181,16 @@ public class MarkerCommand implements CommandExecutor {
             process.handleMessage(BuiltArgument, 3);
             return false;
         }
+        return false;
+    }
+    private boolean followHelpChain(@NotNull Player player, @NotNull String @NotNull [] args){
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3MapMarker Commands:"));
+        player.sendMessage(Component.text("§6/marker add <?name> §r§3- §r§6Creates a marker"));
+        player.sendMessage(Component.text("§6/marker remove <id> §r§3- §r§6Removes a marker"));
+        player.sendMessage(Component.text("§6/marker edit <id> §r§3- §r§6Edits a marker"));
+        player.sendMessage(Component.text("§6/marker nearby <radius> §r§3- §r§6Lists nearby markers"));
+        player.sendMessage(Component.text("§6/marker exit §r§3- §r§6Exit interactive process"));
+        player.sendMessage(Component.text("§6/marker icons §r§3- §r§6List of available icons"));
         return false;
     }
 }

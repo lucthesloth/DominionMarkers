@@ -20,7 +20,7 @@ public class MarkerCommandCompleter implements TabCompleter {
         if (!commandSender.hasPermission("mapmarkers.marker") || !(commandSender instanceof Player))
             return null;
         if (strings.length <= 1)
-            return Stream.of("add", "remove", "edit", "exit", "nearby").filter(string -> string.startsWith(strings[0])).toList();
+            return Stream.of("add", "remove", "edit", "exit", "nearby", "icons", "help").filter(string -> string.startsWith(strings[0])).toList();
         if (strings.length == 2 && strings[0].equalsIgnoreCase("remove"))
             return MarkerUtils.markers.stream().map(Marker::getId).filter(id -> id.startsWith(strings[1])).toList();
         if (strings.length == 4 && strings[0].equalsIgnoreCase("remove"))
