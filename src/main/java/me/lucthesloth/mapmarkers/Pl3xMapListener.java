@@ -10,7 +10,6 @@ import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.event.world.WorldUnloadedEvent;
 import net.pl3x.map.core.world.World;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 

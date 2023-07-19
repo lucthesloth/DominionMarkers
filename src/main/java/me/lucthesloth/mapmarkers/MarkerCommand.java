@@ -5,7 +5,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.Style;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,7 +47,7 @@ public class MarkerCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("nearby"))
             return followNearbyChain(player, args);
         if (args[0].equalsIgnoreCase("help"))
-            return followHelpChain(player, args);
+            return followHelpChain(player);
         return false;
     }
     private boolean followExitChain(@NotNull Player player){
@@ -184,7 +183,7 @@ public class MarkerCommand implements CommandExecutor {
         }
         return false;
     }
-    private boolean followHelpChain(@NotNull Player player, @NotNull String @NotNull [] args){
+    private boolean followHelpChain(@NotNull Player player){
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3MapMarker Commands:"));
         player.sendMessage(Component.text("§6/marker add <?name> §r§3- §r§6Creates a marker"));
         player.sendMessage(Component.text("§6/marker remove <id> §r§3- §r§6Removes a marker"));
