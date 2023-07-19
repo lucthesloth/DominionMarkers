@@ -18,6 +18,7 @@ public class Pl3xMapListener implements EventListener {
     @EventHandler
     public void onPl3xMapEnabled(@NotNull Pl3xMapEnabledEvent event) {
         MarkerUtils.forceRegisterAllIcons();
+        Pl3xMap.api().getWorldRegistry().forEach(this::registerWorld);
     }
 
     @EventHandler
