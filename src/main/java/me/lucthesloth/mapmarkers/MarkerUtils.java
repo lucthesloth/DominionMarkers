@@ -57,7 +57,7 @@ public class MarkerUtils {
         List<Marker> t =  markers.stream().filter(marker -> marker.getId().contains(id.toLowerCase())).toList();
         Marker k = t.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
         if (k == null)
-            k = t.stream().filter(marker -> marker.getId().startsWith(id)).findFirst().orElse(null);
+            k = t.stream().findFirst().orElse(null);
         return k;
     }
     public static boolean addMarker(Marker marker) {
