@@ -27,6 +27,10 @@ public class MarkerUtils {
             Marker[] markerArray = markerGson.fromJson(new FileReader(markerFile), Marker[].class);
             if (markerArray != null)
                 Collections.addAll(markers, markerArray);
+            markers.forEach(k -> {
+                k.setId(MarkerUtils.normalize(k.getId()));
+                k.setName(k.getName().toUpperCase());
+            });
         } catch (IOException e) {
             Bukkit.getLogger().warning("Failed to load markers");
             e.printStackTrace();
