@@ -5,6 +5,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.Style;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,7 @@ public class MarkerCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1 && args[0].equalsIgnoreCase("icons")) {
             commandSender.sendMessage(Component.text("§3[§9MapMarkers§3] §r§dClick for available Icons").style(
-                    Style.style().clickEvent(ClickEvent.openUrl("https://dominionserver.net/markers/icons.html"))
+                    Style.style().clickEvent(ClickEvent.openUrl("https://dominionserver.net/markers/"))
                             .hoverEvent(HoverEvent.showText(Component.text("Click to open link"))).build()
             ));
             return true;

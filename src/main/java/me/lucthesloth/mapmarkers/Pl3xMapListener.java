@@ -1,5 +1,6 @@
 package me.lucthesloth.mapmarkers;
 
+import net.kyori.adventure.text.Component;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.EventHandler;
 import net.pl3x.map.core.event.EventListener;
@@ -8,6 +9,8 @@ import net.pl3x.map.core.event.server.ServerLoadedEvent;
 import net.pl3x.map.core.event.world.WorldLoadedEvent;
 import net.pl3x.map.core.event.world.WorldUnloadedEvent;
 import net.pl3x.map.core.world.World;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -17,8 +20,12 @@ public class Pl3xMapListener implements EventListener {
     }
     @EventHandler
     public void onPl3xMapEnabled(@NotNull Pl3xMapEnabledEvent event) {
-        MarkerUtils.forceRegisterAllIcons();
-        Pl3xMap.api().getWorldRegistry().forEach(this::registerWorld);
+        Bukkit.getScheduler().runTaskLater(MapMarkers.instance, () -> {
+            MapMarkers.instance.getServer().getConsoleSender().sendMessage(Component.text("§3[§9MapMarkers§3] §r§cRe-registering pl3x hooks. (Has pl3x reloaded?)"));
+            MarkerUtils.forceRegisterAllIcons();
+            Pl3xMap.api().getWorldRegistry().forEach(this::registerWorld);
+        }, 100);
+
     }
 
     @EventHandler
