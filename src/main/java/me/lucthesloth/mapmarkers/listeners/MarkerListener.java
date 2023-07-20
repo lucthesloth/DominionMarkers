@@ -1,5 +1,6 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.listeners;
 
+import me.lucthesloth.mapmarkers.util.InteractiveMarkerProcess;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

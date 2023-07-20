@@ -1,6 +1,10 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.commands;
 
 import com.google.gson.Gson;
+import me.lucthesloth.mapmarkers.MapMarkers;
+import me.lucthesloth.mapmarkers.pl3x.Marker;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
+import me.lucthesloth.mapmarkers.util.migration.MigrateHelper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MigrateCommand implements CommandExecutor {
     public static File dataFolder;
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public MigrateCommand(){
         dataFolder = new File(MapMarkers.instance.getDataFolder(), "migrate");
         dataFolder.mkdirs();
@@ -32,7 +37,7 @@ public class MigrateCommand implements CommandExecutor {
             commandSender.sendMessage(Component.text("§cUsage: /migrate <filename>"));
             return true;
         }
-        if (Arrays.stream(dataFolder.list()).anyMatch(t->t.equalsIgnoreCase(strings[0]))) {
+        if (Arrays.stream(Objects.requireNonNull(dataFolder.list())).anyMatch(t->t.equalsIgnoreCase(strings[0]))) {
             File file = new File(dataFolder, strings[0]);
             AtomicInteger success = new AtomicInteger(0);
             List<String> failed = Collections.synchronizedList(List.of());
@@ -64,7 +69,7 @@ public class MigrateCommand implements CommandExecutor {
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
             if (!commandSender.hasPermission("mapmarkers.migrate"))
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             if (strings.length <= 1)
                 return Arrays.stream(Objects.requireNonNull(dataFolder.list())).filter(t->t.contains(strings[0])).toList();
             return null;

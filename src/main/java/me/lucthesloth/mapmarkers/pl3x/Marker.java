@@ -1,16 +1,13 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.pl3x;
 
 import com.google.gson.annotations.Expose;
+import me.lucthesloth.mapmarkers.MapMarkers;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.markers.marker.Icon;
 import net.pl3x.map.core.markers.option.Options;
-import net.pl3x.map.core.markers.option.Popup;
 import net.pl3x.map.core.markers.option.Tooltip;
-
-import java.io.File;
 
 public class Marker {
 

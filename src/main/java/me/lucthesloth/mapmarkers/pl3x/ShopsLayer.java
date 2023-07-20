@@ -1,5 +1,7 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.pl3x;
 
+import me.lucthesloth.mapmarkers.MapMarkers;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.layer.WorldLayer;
 import net.pl3x.map.core.markers.marker.Marker;
@@ -23,6 +25,6 @@ public class ShopsLayer extends WorldLayer {
     }
     @Override
     public @NotNull Collection<Marker<?>> getMarkers() {
-        return MarkerUtils.markers.stream().map(me.lucthesloth.mapmarkers.Marker::getIcon).collect(Collectors.toList());
+        return MarkerUtils.markers.stream().map(me.lucthesloth.mapmarkers.pl3x.Marker::getIcon).collect(Collectors.toList());
     }
 }

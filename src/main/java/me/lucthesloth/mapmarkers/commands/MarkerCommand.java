@@ -1,5 +1,8 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.commands;
 
+import me.lucthesloth.mapmarkers.util.InteractiveMarkerProcess;
+import me.lucthesloth.mapmarkers.pl3x.Marker;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -88,7 +91,7 @@ public class MarkerCommand implements CommandExecutor {
         }
         String id = MarkerUtils.normalize(args[1]);
         if (MarkerUtils.markerExists(id) == null){
-            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
+            player.sendMessage(Component.text("§cMarker with id §6" + id + "§c does not exist"));
             return true;
         }
         if (args.length == 2){
@@ -102,7 +105,7 @@ public class MarkerCommand implements CommandExecutor {
                 player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Marker §6" + id + " §3has been removed"));
                 MarkerUtils.saveMarkers();
             } else {
-                player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker §6" + id + " §ccould not be removed"));
+                player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker §6" + id + "§c could not be removed"));
             }
         }
         return false;
@@ -115,7 +118,7 @@ public class MarkerCommand implements CommandExecutor {
         String id = MarkerUtils.normalize(args[1]);
         Marker marker = MarkerUtils.markerExists(id);
         if (marker == null){
-            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
+            player.sendMessage(Component.text("§cMarker with id §6" + id + "§c does not exist"));
             return true;
         }
         InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, marker));

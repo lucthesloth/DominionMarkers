@@ -1,6 +1,11 @@
 package me.lucthesloth.mapmarkers;
 
 import com.google.gson.GsonBuilder;
+import me.lucthesloth.mapmarkers.commands.MarkerCommand;
+import me.lucthesloth.mapmarkers.commands.MarkerCommandCompleter;
+import me.lucthesloth.mapmarkers.commands.MigrateCommand;
+import me.lucthesloth.mapmarkers.listeners.Pl3xMapListener;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

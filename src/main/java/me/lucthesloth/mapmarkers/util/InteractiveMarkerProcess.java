@@ -1,5 +1,7 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.util;
 
+import me.lucthesloth.mapmarkers.MapMarkers;
+import me.lucthesloth.mapmarkers.pl3x.Marker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;

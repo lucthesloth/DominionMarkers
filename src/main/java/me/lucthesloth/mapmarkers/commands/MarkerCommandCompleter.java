@@ -1,5 +1,7 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.commands;
 
+import me.lucthesloth.mapmarkers.pl3x.Marker;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
 import net.pl3x.map.core.Pl3xMap;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,6 +33,6 @@ public class MarkerCommandCompleter implements TabCompleter {
             return Stream.of("name", "icon", "desc", "pos", "confirm").filter(string -> string.startsWith(strings[1])).toList();
         if (strings.length == 3 && strings[0].equalsIgnoreCase("i") && strings[1].equalsIgnoreCase("icon"))
             return Pl3xMap.api().getIconRegistry().entrySet().stream().map(Map.Entry::getKey).filter(string -> string.contains(strings[2])).toList();
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

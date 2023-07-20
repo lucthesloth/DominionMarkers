@@ -1,6 +1,8 @@
-package me.lucthesloth.mapmarkers;
+package me.lucthesloth.mapmarkers.util;
 
 import com.google.gson.Gson;
+import me.lucthesloth.mapmarkers.MapMarkers;
+import me.lucthesloth.mapmarkers.pl3x.Marker;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.image.IconImage;
 import org.bukkit.Bukkit;
@@ -47,13 +49,14 @@ public class MarkerUtils {
             e.printStackTrace();
         }
     }
-    static void initializeLayer() throws IOException {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void initializeLayer() throws IOException {
         dataFolder = new File(MapMarkers.instance.getDataFolder(), "markers");
         dataFolder.mkdirs();
         markerFile = new File(dataFolder, MapMarkers.instance.getConfig().getString("layer.key", "DEF_LAYER_KEY") + ".json");
         markerFile.createNewFile();
     }
-    static @Nullable Marker markerExists(String id){
+    public static @Nullable Marker markerExists(String id){
         List<Marker> t =  markers.stream().filter(marker -> marker.getId().contains(id.toLowerCase())).toList();
         Marker k = t.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
         if (k == null)
@@ -67,7 +70,7 @@ public class MarkerUtils {
         }
         return false;
     }
-    static boolean removeMarker(String id) {
+    public static boolean removeMarker(String id) {
         return markers.removeIf(marker -> marker.getId().equalsIgnoreCase(id));
     }
     public static String normalize(String string){
@@ -75,7 +78,7 @@ public class MarkerUtils {
     }
     public static List<Marker> nearbyMarkers(Player p, @Nullable Integer radius) {
         if (!p.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world")))
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         List<Marker> nearbyMarkers = new ArrayList<>();
         for (Marker marker : markers) {
             if (distance(marker.getX(), marker.getZ(), p.getLocation().getBlockX(), p.getLocation().getBlockZ()) <= (radius != null ? radius : MapMarkers.instance.getConfig().getInt("layer.nearbyRadius", 10))) {
