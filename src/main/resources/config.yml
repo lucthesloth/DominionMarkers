@@ -1,22 +1,52 @@
-layer:
-  world_name: "world"
-  key: "default_layer_key"
-  label: "default_layer_label"
-  updateInterval: 60
-  showControls: true
-  defaultHidden: false
-  priority: 100
-  zIndex: 100
-  markerFile: "marker.json"
-  nearbyRadius: 10
-marker:
-  pattern: "<center><b>{title}</b><br><i>{description}</i></center>"
-  max_name_length: 40
-  max_desc_length: 100
-  default_image: "marker-icon"
-  size:
-    x: 32
-    z: 32
-  offset:
-    x: 0
-    z: 0
+# This is the default config.yml file. You can change the values to your liking.
+# Configuration Version - Do not change this!
+file_version: 1
+
+# Plugin configuration
+# Print debug messages to the console
+debug: false
+# Check for updates
+check-updates: true
+
+# Command configuration
+
+# Nearby command radius configuration
+nearby:
+  min: 10
+  max: 100
+  default: 20
+
+#Layer configuration
+layers:
+  enabled:
+    - "default"
+  default:
+    # worlds - Worlds to register a layer
+    worlds:
+      - "world"
+    # key - Key for pl3x logic
+    key: "default_layer_key"
+    # label - Will be displayed to users in the Web interface
+    label: "default_layer_label"
+    # updateInterval - Update interval in seconds - Rate in which the markers will be updated
+    updateInterval: 60
+    showControls: true
+    # defaultHidden - Default visibility of the layer
+    defaultHidden: false
+    priority: 100
+    zIndex: 100
+    # marker - Layer marker configuration
+    marker:
+      # pattern - Pattern for the popup, html can be used.
+      # Available variables: {title}, {description}
+      pattern: "<center><b>{title}</b><br><i>{description}</i></center>"
+      # max_name_length - Maximum length of the title
+      max_name_length: 40
+      # max_desc_length - Maximum length of the description
+      max_desc_length: 100
+      # default_image - Default image for markers
+      default_image: "marker-icon"
+      # size - Default image size
+      size:
+        x: 32
+        z: 32
