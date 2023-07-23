@@ -2,7 +2,7 @@ package me.lucthesloth.mapmarkers.listeners;
 
 import me.lucthesloth.mapmarkers.MapMarkers;
 import me.lucthesloth.mapmarkers.util.MarkerUtils;
-import me.lucthesloth.mapmarkers.pl3x.ShopsLayer;
+import me.lucthesloth.mapmarkers.pl3x.MarkerLayer;
 import net.kyori.adventure.text.Component;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.event.EventHandler;
@@ -50,7 +50,7 @@ public class Pl3xMapListener implements EventListener {
 
     private void registerWorld(@NotNull World world) {
         if (world.getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world"))) {
-            world.getLayerRegistry().register(new ShopsLayer());
+            world.getLayerRegistry().register(new MarkerLayer());
         }
     }
     @SuppressWarnings("unused")

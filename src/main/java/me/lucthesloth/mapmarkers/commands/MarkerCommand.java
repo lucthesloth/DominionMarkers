@@ -103,7 +103,7 @@ public class MarkerCommand implements CommandExecutor {
         if (args.length == 3 && args[2].equalsIgnoreCase("confirm")){
             if (MarkerUtils.removeMarker(id)){
                 player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Marker §6" + id + " §3has been removed"));
-                MarkerUtils.saveMarkers();
+                MarkerUtils.SaveLayers();
             } else {
                 player.sendMessage(Component.text("§c§l[MapMarkers] §r§cMarker §6" + id + "§c could not be removed"));
             }

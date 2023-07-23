@@ -1,12 +1,10 @@
 package me.lucthesloth.mapmarkers;
 
-import com.google.gson.GsonBuilder;
 import me.lucthesloth.mapmarkers.commands.MarkerCommand;
 import me.lucthesloth.mapmarkers.commands.MarkerCommandCompleter;
 import me.lucthesloth.mapmarkers.commands.MigrateCommand;
 import me.lucthesloth.mapmarkers.listeners.Pl3xMapListener;
 import me.lucthesloth.mapmarkers.util.MarkerUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,19 +14,34 @@ import java.util.Objects;
 
 public final class MapMarkers extends JavaPlugin {
     public static MapMarkers instance;
+    public static Update update;
+    public static Configuration config;
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
-        MarkerUtils.markerGson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().setLenient().create();
+        config = new Configuration(this);
         try {
-            MarkerUtils.initializeLayer();
+            config.load();
         } catch (IOException e) {
-            MarkerUtils.Log("Failed to read/create marker file");
-            Bukkit.getPluginManager().disablePlugin(this);
             throw new RuntimeException(e);
-
         }
+        if (config.get().getBoolean("check-updates", true)){
+            try {
+                update = new Update(this);
+                String t = update.getUpdateMessageStr();
+                if (t != null) {
+                    MarkerUtils.Log(t);
+                }
+            } catch (IOException e) {
+                    throw new RuntimeException(e);
+            }
+        }
+        try {
+            MarkerUtils.LoadLayers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if (getServer().getPluginManager().isPluginEnabled("Pl3xMap")) {
             MarkerUtils.Log("Found Pl3xMap. Hooking into plugin.");
             new Pl3xMapListener();
@@ -37,7 +50,7 @@ public final class MapMarkers extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        MarkerUtils.loadMarkers();
+
         Objects.requireNonNull(getCommand("mapmarkers")).setExecutor(new MarkerCommand());
         Objects.requireNonNull(getCommand("mapmarkers")).setTabCompleter(new MarkerCommandCompleter());
         Objects.requireNonNull(getCommand("markersmigrate")).setExecutor(new MigrateCommand());
@@ -46,7 +59,7 @@ public final class MapMarkers extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        MarkerUtils.saveMarkers();
+        MarkerUtils.SaveLayers();
     }
 
 }

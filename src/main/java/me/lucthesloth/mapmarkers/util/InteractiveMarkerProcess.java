@@ -129,7 +129,7 @@ public class InteractiveMarkerProcess {
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker edited")));
                 }
                 processes.remove(player);
-                MarkerUtils.saveMarkers();
+                MarkerUtils.SaveLayers();
             }
             case 5 -> {
                 marker.setX(player.getLocation().getBlockX());
