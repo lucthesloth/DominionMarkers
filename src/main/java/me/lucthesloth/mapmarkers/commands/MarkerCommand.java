@@ -77,7 +77,7 @@ public class MarkerCommand implements CommandExecutor {
             if (i != args.length - 1) name.append(" ");
         }
         String id = MarkerUtils.normalize(name.toString());
-        if (MarkerUtils.markerExists(id) != null){
+        if (MarkerUtils.findMarker(id) != null){
             player.sendMessage(Component.text("§cMarker with id " + id + " already exists"));
             return true;
         }
@@ -90,7 +90,7 @@ public class MarkerCommand implements CommandExecutor {
             return true;
         }
         String id = MarkerUtils.normalize(args[1]);
-        if (MarkerUtils.markerExists(id) == null){
+        if (MarkerUtils.findMarker(id) == null){
             player.sendMessage(Component.text("§cMarker with id §6" + id + "§c does not exist"));
             return true;
         }
@@ -116,7 +116,7 @@ public class MarkerCommand implements CommandExecutor {
             return true;
         }
         String id = MarkerUtils.normalize(args[1]);
-        Marker marker = MarkerUtils.markerExists(id);
+        Marker marker = MarkerUtils.findMarker(id);
         if (marker == null){
             player.sendMessage(Component.text("§cMarker with id §6" + id + "§c does not exist"));
             return true;

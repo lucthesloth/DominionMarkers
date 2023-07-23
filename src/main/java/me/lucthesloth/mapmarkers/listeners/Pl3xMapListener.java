@@ -53,7 +53,7 @@ public class Pl3xMapListener implements EventListener {
             world.getLayerRegistry().register(new ShopsLayer());
         }
     }
-
+    @SuppressWarnings("unused")
     public static void shutdown() {
         Pl3xMap.api().getWorldRegistry().forEach(world -> {
             try {

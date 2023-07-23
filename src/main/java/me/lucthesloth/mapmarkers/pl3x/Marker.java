@@ -2,6 +2,7 @@ package me.lucthesloth.mapmarkers.pl3x;
 
 import com.google.gson.annotations.Expose;
 import me.lucthesloth.mapmarkers.MapMarkers;
+import me.lucthesloth.mapmarkers.util.MarkerUtils;
 import net.pl3x.map.core.Pl3xMap;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
@@ -41,7 +42,7 @@ public class Marker {
     public Icon getIcon(){
         if (_icon == null) {
             if (icon == null || icon.isEmpty() || !Pl3xMap.api().getIconRegistry().has(icon)) {
-                MapMarkers.instance.getLogger().warning("Marker " + id + " has invalid icon " + icon + ". Using default icon.");
+                MarkerUtils.Log("Marker " + id + " has invalid icon " + icon + ". Using default icon.");
                 icon = MapMarkers.instance.getConfig().getString("marker.default_image", "marker-icon");
             }
             _icon = net.pl3x.map.core.markers.marker.Marker.icon(id, x, z, icon);

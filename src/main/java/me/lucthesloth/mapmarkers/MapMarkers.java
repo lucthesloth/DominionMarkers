@@ -6,6 +6,7 @@ import me.lucthesloth.mapmarkers.commands.MarkerCommandCompleter;
 import me.lucthesloth.mapmarkers.commands.MigrateCommand;
 import me.lucthesloth.mapmarkers.listeners.Pl3xMapListener;
 import me.lucthesloth.mapmarkers.util.MarkerUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,16 +24,16 @@ public final class MapMarkers extends JavaPlugin {
         try {
             MarkerUtils.initializeLayer();
         } catch (IOException e) {
-            this.getLogger().warning("Failed to read/create marker file");
+            MarkerUtils.Log("Failed to read/create marker file");
             Bukkit.getPluginManager().disablePlugin(this);
             throw new RuntimeException(e);
 
         }
         if (getServer().getPluginManager().isPluginEnabled("Pl3xMap")) {
-            getLogger().info("Found Pl3xMap. Hooking into plugin.");
+            MarkerUtils.Log("Found Pl3xMap. Hooking into plugin.");
             new Pl3xMapListener();
         } else {
-            getLogger().info("Could not find Pl3xMap. Disabling..");
+            MarkerUtils.Log("Could not find Pl3xMap. Disabling..");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -41,6 +42,7 @@ public final class MapMarkers extends JavaPlugin {
         Objects.requireNonNull(getCommand("mapmarkers")).setTabCompleter(new MarkerCommandCompleter());
         Objects.requireNonNull(getCommand("markersmigrate")).setExecutor(new MigrateCommand());
         Objects.requireNonNull(getCommand("markersmigrate")).setTabCompleter(new MigrateCommand.MigrateCommandCompleter());
+        MarkerUtils.Log(MarkerUtils.rainbowText("This text should become a rainbow text! :)"));
     }
     @Override
     public void onDisable() {
