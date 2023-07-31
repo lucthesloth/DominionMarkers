@@ -5,7 +5,7 @@ name: Maven Package
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "multi-layer" ]
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
           dirname=`dirname "$fname"`
           filename=`basename "$fname"`
           mkdir built/
-          cp "${dirname}/$filename" "built/$filename"
+          cp "${dirname}/$filename" "built/ML-$filename"
         done
     - name: Publish Artifact
       uses: kittaakos/upload-artifact-as-is@v0
