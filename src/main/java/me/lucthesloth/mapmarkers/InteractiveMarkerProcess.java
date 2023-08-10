@@ -80,7 +80,7 @@ public class InteractiveMarkerProcess {
         switch (command) {
             case 1 -> {
                 if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40)) {
-                    if (MarkerUtils.markerExists(MarkerUtils.normalize(message)) != null) {
+                    if (MarkerUtils.markerExistsEqual(MarkerUtils.normalize(message)) != null) {
                         player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cMarker already exists, please enter a name for the marker")));
                         return;
                     }

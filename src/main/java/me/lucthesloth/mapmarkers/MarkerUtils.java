@@ -60,8 +60,11 @@ public class MarkerUtils {
             k = t.stream().findFirst().orElse(null);
         return k;
     }
+    static @Nullable Marker markerExistsEqual(String id){
+        return markers.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
+    }
     public static boolean addMarker(Marker marker) {
-        if (markerExists(marker.getId()) == null) {
+        if (markerExistsEqual(marker.getId()) == null) {
             markers.add(marker);
             return true;
         }
