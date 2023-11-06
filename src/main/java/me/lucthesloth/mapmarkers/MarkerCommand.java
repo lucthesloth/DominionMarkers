@@ -74,7 +74,7 @@ public class MarkerCommand implements CommandExecutor {
             if (i != args.length - 1) name.append(" ");
         }
         String id = MarkerUtils.normalize(name.toString());
-        if (MarkerUtils.markerExists(id) != null){
+        if (MarkerUtils.markerExistsEqual(id) != null){
             player.sendMessage(Component.text("§cMarker with id " + id + " already exists"));
             return true;
         }
