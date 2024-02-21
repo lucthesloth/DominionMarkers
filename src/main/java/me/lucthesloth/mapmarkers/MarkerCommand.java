@@ -64,41 +64,31 @@ public class MarkerCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cYou are already in a marker creation process"));
             return true;
         }
-        if (args.length == 1){
-            InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player));
+        if (args.length == 2){
+            InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, args[1]));
             return true;
         }
-        StringBuilder name = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
-            name.append(args[i]);
-            if (i != args.length - 1) name.append(" ");
-        }
-        String id = MarkerUtils.normalize(name.toString());
-        if (MarkerUtils.markerExistsEqual(id) != null){
-            player.sendMessage(Component.text("§cMarker with id " + id + " already exists"));
-            return true;
-        }
-        InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, name.toString()));
+        player.sendMessage(Component.text("§cUsage /marker add <layerName>"));
         return false;
     }
     private boolean followRemoveChain(@NotNull Player player, @NotNull String @NotNull [] args){
         if (args.length == 1){
-            player.sendMessage(Component.text("§cUsage: /marker remove <name>"));
+            player.sendMessage(Component.text("§cUsage: /marker remove <layer> <name>"));
             return true;
         }
-        String id = MarkerUtils.normalize(args[1]);
-        if (MarkerUtils.markerExists(id) == null){
-            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
+        String id = MarkerUtils.normalize(args[2]);
+        if (MarkerUtils.markerExists(id, args[1]) == null){
+            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist in layer " + args[1]));
             return true;
         }
-        if (args.length == 2){
+        if (args.length == 3){
             player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Are you sure you want to delete marker §6" + id + "§3?")
-                    .style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + id + " confirm"))
+                    .style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + args[1] + " " + id + " confirm"))
                             .hoverEvent(HoverEvent.showText(Component.text("Click to confirm")))));
             return false;
         }
-        if (args.length == 3 && args[2].equalsIgnoreCase("confirm")){
-            if (MarkerUtils.removeMarker(id)){
+        if (args.length == 4 && args[3].equalsIgnoreCase("confirm")){
+            if (MarkerUtils.removeMarker(id, args[1])){
                 player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Marker §6" + id + " §3has been removed"));
                 MarkerUtils.saveMarkers();
             } else {
@@ -109,35 +99,35 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followEditChain(@NotNull Player player, @NotNull String @NotNull [] args){
         if (args.length == 1){
-            player.sendMessage(Component.text("§cUsage: /marker edit <name>"));
+            player.sendMessage(Component.text("§cUsage: /marker edit <layer> <name>"));
             return true;
         }
-        String id = MarkerUtils.normalize(args[1]);
-        Marker marker = MarkerUtils.markerExists(id);
+        String id = MarkerUtils.normalize(args[2]);
+        Marker marker = MarkerUtils.markerExists(id, args[1]);
         if (marker == null){
-            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist"));
+            player.sendMessage(Component.text("§cMarker with id §6" + id + " §cdoes not exist in layer " + args[1]));
             return true;
         }
-        InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, marker));
+        InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, marker, args[1]));
         return false;
     }
     private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
         Integer radius = null;
-        if (args.length == 2){
+        if (args.length == 3){
             try {
-                radius = Integer.parseInt(args[1]);
+                radius = Integer.parseInt(args[2]);
             } catch (NumberFormatException ignored){
-                player.sendMessage(Component.text("§cUsage: /marker nearby <radius>"));
+                player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
                 return true;
             }
         }
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Nearby markers:"));
-        for (Marker marker : MarkerUtils.nearbyMarkers(player, radius)){
+        for (Marker marker : MarkerUtils.nearbyMarkers(player, args[1], radius)){
             TextComponent.@NotNull Builder builder = Component.text();
             builder.append(Component.text("§3[§9MapMarkers§3] §r§6" + marker.getName() + " §3(" + marker.getId() + ") "));
-            builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + marker.getId()))
+            builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + args[1] + " " + marker.getId()))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to edit")))));
-            builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + marker.getId()))
+            builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + args[1] + " "  + marker.getId()))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to remove")))));
             player.sendMessage(builder.build());
         }
@@ -185,10 +175,10 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followHelpChain(@NotNull Player player){
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3MapMarker Commands:"));
-        player.sendMessage(Component.text("§6/marker add <?name> §r§3- §r§6Creates a marker"));
-        player.sendMessage(Component.text("§6/marker remove <id> §r§3- §r§6Removes a marker"));
-        player.sendMessage(Component.text("§6/marker edit <id> §r§3- §r§6Edits a marker"));
-        player.sendMessage(Component.text("§6/marker nearby <radius> §r§3- §r§6Lists nearby markers"));
+        player.sendMessage(Component.text("§6/marker add <layer> §r§3- §r§6Creates a marker"));
+        player.sendMessage(Component.text("§6/marker remove <layer> <id> §r§3- §r§6Removes a marker"));
+        player.sendMessage(Component.text("§6/marker edit <layer> <id> §r§3- §r§6Edits a marker"));
+        player.sendMessage(Component.text("§6/marker nearby <layer> <radius> §r§3- §r§6Lists nearby markers"));
         player.sendMessage(Component.text("§6/marker exit §r§3- §r§6Exit interactive process"));
         player.sendMessage(Component.text("§6/marker icons §r§3- §r§6List of available icons"));
         return false;

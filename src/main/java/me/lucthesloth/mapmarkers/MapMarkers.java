@@ -14,6 +14,7 @@ public final class MapMarkers extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        getConfig().getStringList("layers.keys").forEach(t -> getLogger().info(t));
         MarkerUtils.markerGson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().setLenient().create();
         try {
             MarkerUtils.initializeLayer();

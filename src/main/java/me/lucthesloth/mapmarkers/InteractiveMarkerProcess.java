@@ -15,34 +15,29 @@ public class InteractiveMarkerProcess {
     Player player;
     Marker marker;
     String oldID;
+    String layer;
     int step = 0x10;
-    public InteractiveMarkerProcess(Player player) {
+    public InteractiveMarkerProcess(Player player, String layer) {
         marker = new Marker();
         marker.setX(player.getLocation().getBlockX());
         marker.setZ(player.getLocation().getBlockZ());
         this.setStepBit(5);
         this.player = player;
-        sendInformationMessage();
-
-    }
-    public InteractiveMarkerProcess(Player player, String name) {
-        marker = new Marker(player.getLocation().getBlockX(), player.getLocation().getBlockZ(), name);
-        marker.setId(MarkerUtils.normalize(name));
-        this.setStepBit(0);
-        this.setStepBit(5);
-        this.player = player;
+        this.layer = layer;
         sendInformationMessage();
     }
-    public InteractiveMarkerProcess(Player player, Marker marker) {
+    public InteractiveMarkerProcess(Player player, Marker marker, String layer) {
         this.marker = marker;
         step = 0x1F;
         this.player = player;
         this.oldID = marker.getId();
+        this.layer = layer;
         sendInformationMessage();
     }
     //Test
     public void sendInformationMessage(){
         player.sendMessage(Component.text("\n\n\n§3[§9MapMarkers§3] §r§aInteractive Marker Creation"));
+        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§5LAYER => §6" + this.layer));
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3ID => §6" + marker.getId()));
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Name => §6" + marker.getName(),
                 Style.style().clickEvent(ClickEvent.suggestCommand("/marker i name "))
@@ -80,7 +75,7 @@ public class InteractiveMarkerProcess {
         switch (command) {
             case 1 -> {
                 if (message.length() <= MapMarkers.instance.getConfig().getInt("marker.max_name_length", 40)) {
-                    if (MarkerUtils.markerExistsEqual(MarkerUtils.normalize(message)) != null) {
+                    if (MarkerUtils.markerExistsEqual(MarkerUtils.normalize(message), layer) != null) {
                         player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§cMarker already exists, please enter a name for the marker")));
                         return;
                     }
@@ -119,11 +114,11 @@ public class InteractiveMarkerProcess {
                     return;
                 }
                 if (oldID == null) {
-                    MarkerUtils.addMarker(marker);
+                    MarkerUtils.addMarker(marker, layer);
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker created")));
                 } else {
-                    MarkerUtils.removeMarker(oldID);
-                    MarkerUtils.addMarker(marker);
+                    MarkerUtils.removeMarker(oldID, layer);
+                    MarkerUtils.addMarker(marker, layer);
                     player.sendMessage(Component.text(("§3[§9MapMarkers§3] §r§6Marker edited")));
                 }
                 processes.remove(player);

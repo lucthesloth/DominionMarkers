@@ -28,8 +28,8 @@ public class MigrateCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (!commandSender.hasPermission("mapmarkers.migrate"))
             return true;
-        if (strings.length == 0) {
-            commandSender.sendMessage(Component.text("§cUsage: /migrate <filename>"));
+        if (strings.length != 2) {
+            commandSender.sendMessage(Component.text("§cUsage: /migrate <filename> <layerName>"));
             return true;
         }
         if (Arrays.stream(dataFolder.list()).anyMatch(t->t.equalsIgnoreCase(strings[0]))) {
@@ -41,7 +41,7 @@ public class MigrateCommand implements CommandExecutor {
                 helper.markers.forEach(marker -> {
                     if (MarkerUtils.addMarker(new Marker(marker.data.key, marker.data.point.x, marker.data.point.z, marker.data.image,
                             marker.options.tooltip.content.split("<i>", 2)[1],
-                            marker.options.tooltip.content.substring(11).split("</b>")[0])))
+                            marker.options.tooltip.content.substring(11).split("</b>")[0]), strings[1]))
                         success.getAndIncrement();
                     else
                         failed.add(marker.data.key);

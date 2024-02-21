@@ -8,79 +8,88 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class MarkerUtils {
     public static Gson markerGson;
     public static File dataFolder;
     public static File markerFile;
-    public static ArrayList<Marker> markers = new ArrayList<>();
+    public static Map<String, List<Marker>> markersMap = new HashMap<>();
     public static void loadMarkers(){
-        try {
-            markers = new ArrayList<>();
-            Marker[] markerArray = markerGson.fromJson(new FileReader(markerFile), Marker[].class);
-            if (markerArray != null)
-                Collections.addAll(markers, markerArray);
-            markers.forEach(k -> {
-                k.setId(MarkerUtils.normalize(k.getId()));
-                k.setName(k.getName().toUpperCase());
-            });
-        } catch (IOException e) {
-            Bukkit.getLogger().warning("Failed to load markers");
-            e.printStackTrace();
-        }
+        markersMap = new HashMap<>();
+        MapMarkers.instance.getConfig().getStringList("layers.keys").forEach(k -> {
+            File temp = new File(dataFolder, MapMarkers.instance.getConfig().getString("layers." + k + ".key") + ".json");
+            try {
+                Marker[] markerArray = markerGson.fromJson(new FileReader(temp), Marker[].class);
+                List<Marker> t = new ArrayList<>();
+                if (markerArray != null)
+                    Collections.addAll(t, markerArray);
+                t.forEach(e -> {
+                    e.setId(MarkerUtils.normalize(e.getId()));
+                    e.setName(e.getName().toUpperCase());
+                });
+                markersMap.put(k, t);
+            } catch (FileNotFoundException e) {
+                Bukkit.getLogger().warning("Failed to load markers");
+                e.printStackTrace();
+            }
+        });
     }
     public static void saveMarkers(){
-        FileWriter writer;
-        try {
-            writer = new FileWriter(markerFile, false);
-            markerGson.toJson(markers, writer);
-            writer.close();
-        } catch (IOException e) {
-            Bukkit.getLogger().warning("Failed to save markers");
-            e.printStackTrace();
-        }
+        markersMap.forEach((key, l) -> {
+            try {
+                File temp = new File(dataFolder, MapMarkers.instance.getConfig().getString("layers." + key + ".key") + ".json");
+                FileWriter writer = new FileWriter(temp, false);
+                markerGson.toJson(l, writer);
+                writer.close();
+            } catch (IOException e) {
+                Bukkit.getLogger().warning("Failed to save markers");
+                e.printStackTrace();
+            }
+        });
     }
     static void initializeLayer() throws IOException {
         dataFolder = new File(MapMarkers.instance.getDataFolder(), "markers");
         dataFolder.mkdirs();
-        markerFile = new File(dataFolder, MapMarkers.instance.getConfig().getString("layer.key", "DEF_LAYER_KEY") + ".json");
-        markerFile.createNewFile();
+        MapMarkers.instance.getConfig().getStringList("layers.keys").forEach( t -> {
+            markerFile = new File(dataFolder, MapMarkers.instance.getConfig().getString("layers." + t + ".key", "DEF_LAYER_KEY") + ".json");
+            try {
+                markerFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
-    static @Nullable Marker markerExists(String id){
-        List<Marker> t =  markers.stream().filter(marker -> marker.getId().contains(id.toLowerCase())).toList();
+    static @Nullable Marker markerExists(String id, String key){
+        List<Marker> t = markersMap.getOrDefault(key, Collections.emptyList()).stream().filter(marker -> marker.getId().contains(id.toLowerCase())).toList();
         Marker k = t.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
         if (k == null)
             k = t.stream().findFirst().orElse(null);
         return k;
     }
-    static @Nullable Marker markerExistsEqual(String id){
-        return markers.stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
+    static @Nullable Marker markerExistsEqual(String id, String key){
+        return markersMap.getOrDefault(key, Collections.emptyList()).stream().filter(marker -> marker.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
-    public static boolean addMarker(Marker marker) {
-        if (markerExistsEqual(marker.getId()) == null) {
-            markers.add(marker);
+    public static boolean addMarker(Marker marker, String key) {
+        if (!markersMap.containsKey(key)) return false;
+        if (markerExistsEqual(marker.getId(), key) == null) {
+            markersMap.getOrDefault(key, Collections.emptyList()).add(marker);
             return true;
         }
         return false;
     }
-    static boolean removeMarker(String id) {
-        return markers.removeIf(marker -> marker.getId().equalsIgnoreCase(id));
+    static boolean removeMarker(String id, String key) {
+        return markersMap.getOrDefault(key, Collections.emptyList()).removeIf(marker -> marker.getId().equalsIgnoreCase(id));
     }
     public static String normalize(String string){
         return string.toLowerCase().trim().replaceAll("[^A-Za-z0-9]", "");
     }
-    public static List<Marker> nearbyMarkers(Player p, @Nullable Integer radius) {
+    public static List<Marker> nearbyMarkers(Player p, String key, @Nullable Integer radius) {
         if (!p.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world")))
             return Collections.EMPTY_LIST;
         List<Marker> nearbyMarkers = new ArrayList<>();
-        for (Marker marker : markers) {
+        for (Marker marker : markersMap.getOrDefault(key, Collections.emptyList())) {
             if (distance(marker.getX(), marker.getZ(), p.getLocation().getBlockX(), p.getLocation().getBlockZ()) <= (radius != null ? radius : MapMarkers.instance.getConfig().getInt("layer.nearbyRadius", 10))) {
                 nearbyMarkers.add(marker);
             }

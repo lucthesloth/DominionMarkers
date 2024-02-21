@@ -47,7 +47,9 @@ public class Pl3xMapListener implements EventListener {
 
     private void registerWorld(@NotNull World world) {
         if (world.getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world"))) {
-            world.getLayerRegistry().register(new ShopsLayer());
+            MarkerUtils.markersMap.keySet().forEach(t -> {
+                world.getLayerRegistry().register(new GenericLayer(t));
+            });
         }
     }
 

@@ -19,18 +19,21 @@ public class MarkerCommandCompleter implements TabCompleter {
             return null;
         if (strings.length <= 1)
             return Stream.of("add", "remove", "edit", "exit", "nearby", "icons", "help").filter(string -> string.startsWith(strings[0])).toList();
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("remove"))
-            return MarkerUtils.markers.stream().map(Marker::getId).filter(id -> id.startsWith(strings[1])).toList();
+        if (strings.length == 2 && (strings[0].equalsIgnoreCase("add") || strings[0].equalsIgnoreCase("remove")
+        || strings[0].equalsIgnoreCase("edit") || strings[0].equalsIgnoreCase("nearby")))
+            return MarkerUtils.markersMap.keySet().stream().toList();
+        if (strings.length == 3 && strings[0].equalsIgnoreCase("remove"))
+            return MarkerUtils.markersMap.getOrDefault(strings[1], Collections.emptyList()).stream().map(Marker::getId).filter(id -> id.startsWith(strings[2])).toList();
         if (strings.length == 4 && strings[0].equalsIgnoreCase("remove"))
             return List.of("confirm");
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("edit"))
-            return MarkerUtils.markers.stream().map(Marker::getId).filter(k -> k.contains(strings[1])).toList();
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("nearby"))
-            return Stream.of("10", "20", "30", "40", "50", "60", "70", "80", "90", "100").filter(string -> string.startsWith(strings[1])).toList();
+        if (strings.length == 3 && strings[0].equalsIgnoreCase("edit"))
+            return MarkerUtils.markersMap.getOrDefault(strings[1], Collections.emptyList()).stream().map(Marker::getId).filter(k -> k.contains(strings[2])).toList();
+        if (strings.length == 3 && strings[0].equalsIgnoreCase("nearby"))
+            return Stream.of("10", "20", "30", "40", "50", "60", "70", "80", "90", "100").filter(string -> string.startsWith(strings[2])).toList();
         if (strings.length == 2 && strings[0].equalsIgnoreCase("i"))
             return Stream.of("name", "icon", "desc", "pos", "confirm").filter(string -> string.startsWith(strings[1])).toList();
         if (strings.length == 3 && strings[0].equalsIgnoreCase("i") && strings[1].equalsIgnoreCase("icon"))
             return Pl3xMap.api().getIconRegistry().entrySet().stream().map(Map.Entry::getKey).filter(string -> string.contains(strings[2])).toList();
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }
