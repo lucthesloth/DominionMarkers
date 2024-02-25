@@ -50,6 +50,9 @@ public class MarkerCommand implements CommandExecutor {
             return followHelpChain(player);
         return false;
     }
+    private boolean isLayerValid(@NotNull String layer){
+        return MarkerUtils.markersMap.containsKey(layer);
+    }
     private boolean followExitChain(@NotNull Player player){
         if (!InteractiveMarkerProcess.processes.containsKey(player)){
             player.sendMessage(Component.text("§cYou are not in a marker creation process"));
@@ -64,7 +67,7 @@ public class MarkerCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cYou are already in a marker creation process"));
             return true;
         }
-        if (args.length == 2){
+        if (args.length == 2 && isLayerValid(args[1])){
             InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, args[1]));
             return true;
         }
@@ -72,7 +75,7 @@ public class MarkerCommand implements CommandExecutor {
         return false;
     }
     private boolean followRemoveChain(@NotNull Player player, @NotNull String @NotNull [] args){
-        if (args.length == 1){
+        if (args.length == 1 || !isLayerValid(args[1])){
             player.sendMessage(Component.text("§cUsage: /marker remove <layer> <name>"));
             return true;
         }
@@ -98,7 +101,7 @@ public class MarkerCommand implements CommandExecutor {
         return false;
     }
     private boolean followEditChain(@NotNull Player player, @NotNull String @NotNull [] args){
-        if (args.length == 1){
+        if (args.length == 1 || !isLayerValid(args[1])){
             player.sendMessage(Component.text("§cUsage: /marker edit <layer> <name>"));
             return true;
         }
@@ -113,6 +116,10 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
         Integer radius = null;
+        if (!isLayerValid(args[1])){
+            player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
+            return true;
+        }
         if (args.length == 3){
             try {
                 radius = Integer.parseInt(args[2]);
