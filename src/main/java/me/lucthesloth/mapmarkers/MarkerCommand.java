@@ -116,12 +116,12 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
         Integer radius = null;
-        if (!isLayerValid(args[1])){
-            player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
-            return true;
-        }
         if (args.length == 3){
             try {
+                if (!isLayerValid(args[1])){
+                    player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
+                    return true;
+                }
                 radius = Integer.parseInt(args[2]);
             } catch (NumberFormatException ignored){
                 player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
