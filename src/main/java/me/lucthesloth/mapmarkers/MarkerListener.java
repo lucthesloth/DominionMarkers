@@ -15,7 +15,9 @@ public class MarkerListener implements Listener {
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.NORMAL)
     public void onDimensionSwitch(PlayerChangedWorldEvent event) {
-        InteractiveMarkerProcess.processes.remove(event.getPlayer());
-        event.getPlayer().sendMessage(Component.text("§cRemoving you from marker creation due to dimension change."));
+        if (InteractiveMarkerProcess.processes.containsKey(event.getPlayer())) {
+            InteractiveMarkerProcess.processes.remove(event.getPlayer());
+            event.getPlayer().sendMessage(Component.text("§cRemoving you from marker creation due to dimension change."));
+        }
     }
 }
