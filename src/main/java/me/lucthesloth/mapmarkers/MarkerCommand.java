@@ -116,18 +116,18 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
         Integer radius = null;
-        if (args.length == 3){
-            try {
-                if (!isLayerValid(args[1])){
-                    player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
-                    return true;
-                }
-                radius = Integer.parseInt(args[2]);
-            } catch (NumberFormatException ignored){
-                player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
-                return true;
-            }
+        if (args.length != 3 || !isLayerValid(args[1])){
+            player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
+            return true;
         }
+
+        try {
+            radius = Integer.parseInt(args[2]);
+        } catch (NumberFormatException ignored){
+            player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
+            return true;
+        }
+
         player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Nearby markers:"));
         for (Marker marker : MarkerUtils.nearbyMarkers(player, args[1], radius)){
             TextComponent.@NotNull Builder builder = Component.text();
