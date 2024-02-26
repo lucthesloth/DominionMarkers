@@ -111,6 +111,12 @@ public class MarkerCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cUsage: /marker edit <layer> <name>"));
             return true;
         }
+        if (!player.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString(
+                "layers." + args[1] + ".world_name"
+        ))){
+            player.sendMessage(Component.text("§cYou are not in the same dimension as this layer!"));
+            return false;
+        }
         String id = MarkerUtils.normalize(args[2]);
         Marker marker = MarkerUtils.markerExists(id, args[1]);
         if (marker == null){
@@ -126,7 +132,12 @@ public class MarkerCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
             return true;
         }
-
+        if (!player.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString(
+                "layers." + args[1] + ".world_name"
+        ))){
+            player.sendMessage(Component.text("§cYou are not in the same dimension as this layer!"));
+            return false;
+        }
         try {
             radius = Integer.parseInt(args[2]);
         } catch (NumberFormatException ignored){
