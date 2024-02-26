@@ -68,6 +68,12 @@ public class MarkerCommand implements CommandExecutor {
             return true;
         }
         if (args.length == 2 && isLayerValid(args[1])){
+            if (!player.getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString(
+                    "layers." + args[1] + ".world_name"
+            ))){
+                player.sendMessage(Component.text("§cYou are not in the same dimension as this layer!"));
+                return false;
+            }
             InteractiveMarkerProcess.processes.put(player, new InteractiveMarkerProcess(player, args[1]));
             return true;
         }

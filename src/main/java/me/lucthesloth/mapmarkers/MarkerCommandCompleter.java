@@ -7,6 +7,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,14 @@ public class MarkerCommandCompleter implements TabCompleter {
         if (strings.length <= 1)
             return Stream.of("add", "remove", "edit", "exit", "nearby", "icons", "help").filter(string -> string.startsWith(strings[0])).toList();
         if (strings.length == 2 && (strings[0].equalsIgnoreCase("add") || strings[0].equalsIgnoreCase("remove")
-        || strings[0].equalsIgnoreCase("edit") || strings[0].equalsIgnoreCase("nearby")))
-            return MarkerUtils.markersMap.keySet().stream().toList();
+        || strings[0].equalsIgnoreCase("edit") || strings[0].equalsIgnoreCase("nearby"))){
+            List<String> e = new ArrayList<>();
+            MarkerUtils.markersMap.keySet().forEach(t -> {
+                if (((Player) commandSender).getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layers." + t + ".world_name")))
+                    e.add(t);
+            });
+            return e;
+        }
         if (strings.length == 3 && strings[0].equalsIgnoreCase("remove"))
             return MarkerUtils.markersMap.getOrDefault(strings[1], Collections.emptyList()).stream().map(Marker::getId).filter(id -> id.startsWith(strings[2])).toList();
         if (strings.length == 4 && strings[0].equalsIgnoreCase("remove"))

@@ -46,11 +46,10 @@ public class Pl3xMapListener implements EventListener {
     }
 
     private void registerWorld(@NotNull World world) {
-        if (world.getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layer.world_name", "world"))) {
-            MarkerUtils.markersMap.keySet().forEach(t -> {
+        MarkerUtils.markersMap.keySet().forEach(t -> {
+            if (world.getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layers." + t + ".world_name", "world")))
                 world.getLayerRegistry().register(new GenericLayer(t));
-            });
-        }
+        });
     }
 
     public static void shutdown() {
