@@ -128,6 +128,18 @@ public class MarkerCommand implements CommandExecutor {
     }
     private boolean followNearbyChain(@NotNull Player player, @NotNull String @NotNull [] args) {
         Integer radius = null;
+        if (args.length == 1 || args.length == 2){
+            try {
+                radius = args.length == 2 ? Integer.parseInt(args[1]) : 10;
+                Integer finalRadius = radius;
+                MarkerUtils.markersMap.keySet().stream().filter(t -> MapMarkers.instance.getConfig().getString(String.format("layers.%s.world_name", t), "world").equalsIgnoreCase(player.getWorld().getName()))
+                        .forEach(t -> sendNearbyMarkers(player, finalRadius, t));
+                return false;
+            } catch (NumberFormatException exception) {
+                player.sendMessage(Component.text(String.format("§c%s §eis not a number!", args[1])));
+                return true;
+            }
+        }
         if (args.length != 3 || !isLayerValid(args[1])){
             player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
             return true;
@@ -144,18 +156,20 @@ public class MarkerCommand implements CommandExecutor {
             player.sendMessage(Component.text("§cUsage: /marker nearby <layer> <radius>"));
             return true;
         }
-
-        player.sendMessage(Component.text("§3[§9MapMarkers§3] §r§3Nearby markers:"));
-        for (Marker marker : MarkerUtils.nearbyMarkers(player, args[1], radius)){
+        sendNearbyMarkers(player, radius, args[1]);
+        return false;
+    }
+    private void sendNearbyMarkers(Player player, int radius, String layer){
+        player.sendMessage(Component.text(String.format("§3[§9MapMarkers§3] §r§3Nearby markers in layer §9%s§3:", layer)));
+        for (Marker marker : MarkerUtils.nearbyMarkers(player, layer, radius)){
             TextComponent.@NotNull Builder builder = Component.text();
             builder.append(Component.text("§3[§9MapMarkers§3] §r§6" + marker.getName() + " §3(" + marker.getId() + ") "));
-            builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + args[1] + " " + marker.getId()))
+            builder.append(Component.text(" §d[§cEdit§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker edit " + layer + " " + marker.getId()))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to edit")))));
-            builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + args[1] + " "  + marker.getId()))
+            builder.append(Component.text(" §d[§cRemove§d] ").style(Style.style().clickEvent(ClickEvent.runCommand("/marker remove " + layer + " "  + marker.getId()))
                     .hoverEvent(HoverEvent.showText(Component.text("Click to remove")))));
             player.sendMessage(builder.build());
         }
-        return false;
     }
     private boolean followInternalChain(@NotNull Player player, @NotNull String @NotNull [] args){
         if (args.length <= 1) return true;
