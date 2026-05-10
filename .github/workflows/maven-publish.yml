@@ -5,7 +5,7 @@ name: Maven Package
 
 on:
   push:
-    branches: [ "player-markers" ]
+    branches: [ "folia" ]
 
 jobs:
   build:
@@ -16,11 +16,11 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
@@ -29,11 +29,10 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Copy output file to artifact
       run: |
-        find target/ -type f -name "MapMarkers-1.0-*.jar" | while read fname; do
-          dirname=`dirname "$fname"`
+        mkdir -p built
+        find target/ -type f -name "MapMarkers-*.jar" ! -name "original-*.jar" | while read -r fname; do
           filename=`basename "$fname"`
-          mkdir built/
-          cp "${dirname}/$filename" "built/$filename"
+          cp "$fname" "built/$filename"
         done
     - name: Publish Artifact
       uses: kittaakos/upload-artifact-as-is@v0
