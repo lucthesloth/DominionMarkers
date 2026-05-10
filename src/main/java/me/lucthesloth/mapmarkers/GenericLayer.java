@@ -10,21 +10,26 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GenericLayer extends WorldLayer {
-    String genericLayer;
+    private final String layerKey;
+
     public GenericLayer(String layerName) {
         super(MapMarkers.instance.getConfig().getString("layers." + layerName + ".key", "DEF_LAYER_KEY"),
                 Objects.requireNonNull(Pl3xMap.api().getWorldRegistry()
-                        .get(MapMarkers.instance.getConfig().getString("layers." + layerName + ".world_name", "world"))),
+                        .get(MapMarkers.instance.getConfig().getString("layers." + layerName + ".world_name", "world")),
+                        "World not found for layer " + layerName),
                 () -> MapMarkers.instance.getConfig().getString("layers." + layerName + ".label", "DEF_LAYER_LABEL"));
-        genericLayer = layerName;
+        this.layerKey = layerName;
         setUpdateInterval(MapMarkers.instance.getConfig().getInt("global.updateInterval", 60));
         setShowControls(MapMarkers.instance.getConfig().getBoolean("layers." + layerName + ".showControls", true));
         setDefaultHidden(MapMarkers.instance.getConfig().getBoolean("layers." + layerName + ".defaultHidden", false));
         setPriority(MapMarkers.instance.getConfig().getInt("layers." + layerName + ".priority", 100));
         setZIndex(MapMarkers.instance.getConfig().getInt("layers." + layerName + ".zIndex", 100));
     }
+
     @Override
     public @NotNull Collection<net.pl3x.map.core.markers.marker.Marker<?>> getMarkers() {
-        return MarkerUtils.markersMap.getOrDefault(genericLayer, Collections.emptyList()).stream().map(me.lucthesloth.mapmarkers.Marker::getIcon).collect(Collectors.toList());
+        return MarkerUtils.markersMap.getOrDefault(layerKey, Collections.emptyList()).stream()
+                .map(me.lucthesloth.mapmarkers.Marker::getIcon)
+                .collect(Collectors.toList());
     }
 }

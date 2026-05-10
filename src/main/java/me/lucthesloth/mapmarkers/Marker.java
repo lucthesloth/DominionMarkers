@@ -2,15 +2,11 @@ package me.lucthesloth.mapmarkers;
 
 import com.google.gson.annotations.Expose;
 import net.pl3x.map.core.Pl3xMap;
-import net.pl3x.map.core.image.IconImage;
 import net.pl3x.map.core.markers.Point;
 import net.pl3x.map.core.markers.Vector;
 import net.pl3x.map.core.markers.marker.Icon;
 import net.pl3x.map.core.markers.option.Options;
-import net.pl3x.map.core.markers.option.Popup;
 import net.pl3x.map.core.markers.option.Tooltip;
-
-import java.io.File;
 
 public class Marker {
 
@@ -26,7 +22,7 @@ public class Marker {
     private String icon = "";
     @Expose
     private String description = "";
-    private Icon _icon;
+    private volatile Icon _icon;
     public Marker(){}
     public Marker(String id, double x, double z, String icon, String description, String name) {
         this.id = id;
@@ -42,28 +38,38 @@ public class Marker {
         this.name = name;
     }
     public Icon getIcon(){
-        if (_icon == null) {
+        Icon local = _icon;
+        if (local != null) return local;
+        synchronized (this) {
+            if (_icon != null) return _icon;
             if (icon == null || icon.isEmpty() || !Pl3xMap.api().getIconRegistry().has(icon)) {
                 MapMarkers.instance.getLogger().warning("Marker " + id + " has invalid icon " + icon + ". Using default icon.");
                 icon = MapMarkers.instance.getConfig().getString("marker.default_image", "marker-icon");
             }
-            _icon = net.pl3x.map.core.markers.marker.Marker.icon(id, x, z, icon);
+            String safeName = name == null ? "" : name;
+            String safeDesc = description == null ? "" : description;
+            String pattern = MapMarkers.instance.getConfig().getString("marker.pattern", "<center><b>{title}</b><br><i>{description}</i></center>");
+            String rendered = pattern.replace("{title}", safeName).replace("{description}", safeDesc);
+
+            Icon built = net.pl3x.map.core.markers.marker.Marker.icon(id, x, z, icon);
             Options.Builder options = Options.builder();
             options.tooltipOpacity(1.0);
-            options.popupContent(MapMarkers.instance.getConfig().getString("marker.pattern", "<center><b>{title}</b><br><i>{description}</i></center>").replace("{title}", name)
-                    .replace("{description}", description));
+            options.popupContent(rendered);
             options.popupShouldAutoClose(true);
             options.popupShouldAutoPan(false);
-            options.tooltipContent(MapMarkers.instance.getConfig().getString("marker.pattern", "<center><b>{title}</b><br><i>{description}</i></center>").replace("{title}", name)
-                    .replace("{description}", description));
-            options.tooltipOffset(Point.of(0, -(MapMarkers.instance.getConfig().getInt("marker.size.z", 32)/4)));
+            options.tooltipContent(rendered);
+            int sizeZ = MapMarkers.instance.getConfig().getInt("marker.size.z", 32);
+            int sizeX = MapMarkers.instance.getConfig().getInt("marker.size.x", 32);
+            options.tooltipOffset(Point.of(0, -(sizeZ / 4)));
             options.tooltipDirection(Tooltip.Direction.TOP);
-            options.popupOffset(Point.of(MapMarkers.instance.getConfig().getInt("marker.offset.x", 0),MapMarkers.instance.getConfig().getInt("marker.offset.z", 0)));
-            _icon.setSize(Vector.of(MapMarkers.instance.getConfig().getInt("marker.size.x", 32), MapMarkers.instance.getConfig().getInt("marker.size.z", 32)));
-            _icon.setOptions(options.build());
-
+            options.popupOffset(Point.of(
+                    MapMarkers.instance.getConfig().getInt("marker.offset.x", 0),
+                    MapMarkers.instance.getConfig().getInt("marker.offset.z", 0)));
+            built.setSize(Vector.of(sizeX, sizeZ));
+            built.setOptions(options.build());
+            _icon = built;
+            return built;
         }
-        return _icon;
     }
 
     //getters and setters
