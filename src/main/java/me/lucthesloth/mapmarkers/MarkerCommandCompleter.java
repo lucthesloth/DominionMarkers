@@ -16,32 +16,47 @@ import java.util.stream.Stream;
 
 public class MarkerCommandCompleter implements TabCompleter {
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (!commandSender.hasPermission("mapmarkers.marker") || !(commandSender instanceof Player))
-            return null;
-        if (strings.length <= 1)
-            return Stream.of("add", "remove", "edit", "exit", "nearby", "icons", "help").filter(string -> string.startsWith(strings[0])).toList();
-        if (strings.length == 2 && (strings[0].equalsIgnoreCase("add") || strings[0].equalsIgnoreCase("remove")
-        || strings[0].equalsIgnoreCase("edit") || strings[0].equalsIgnoreCase("nearby"))){
-            List<String> e = new ArrayList<>();
-            MarkerUtils.markersMap.keySet().forEach(t -> {
-                if (((Player) commandSender).getWorld().getName().equalsIgnoreCase(MapMarkers.instance.getConfig().getString("layers." + t + ".world_name")))
-                    e.add(t);
-            });
-            return e;
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (!sender.hasPermission("mapmarkers.marker") || !(sender instanceof Player player)) return null;
+        if (args.length <= 1) {
+            return Stream.of("add", "remove", "edit", "exit", "nearby", "icons", "help")
+                    .filter(string -> string.startsWith(args[0].toLowerCase()))
+                    .toList();
         }
-        if (strings.length == 3 && strings[0].equalsIgnoreCase("remove"))
-            return MarkerUtils.markersMap.getOrDefault(strings[1], Collections.emptyList()).stream().map(Marker::getId).filter(id -> id.startsWith(strings[2])).toList();
-        if (strings.length == 4 && strings[0].equalsIgnoreCase("remove"))
+        String sub = args[0].toLowerCase();
+        if (args.length == 2 && (sub.equals("add") || sub.equals("remove") || sub.equals("edit") || sub.equals("nearby"))) {
+            List<String> result = new ArrayList<>();
+            MarkerUtils.markersMap.keySet().forEach(layer -> {
+                String world = MapMarkers.instance.getConfig().getString("layers." + layer + ".world_name");
+                if (world != null && player.getWorld().getName().equalsIgnoreCase(world)) {
+                    result.add(layer);
+                }
+            });
+            // /marker nearby also accepts a bare radius as arg1
+            if (sub.equals("nearby")) {
+                Stream.of("10", "20", "30", "40", "50").forEach(result::add);
+            }
+            return result.stream().filter(v -> v.startsWith(args[1])).toList();
+        }
+        if (args.length == 3 && (sub.equals("remove") || sub.equals("edit"))) {
+            return MarkerUtils.markersMap.getOrDefault(args[1], Collections.emptyList()).stream()
+                    .map(Marker::getId).filter(id -> id.startsWith(args[2])).toList();
+        }
+        if (args.length == 4 && sub.equals("remove")) {
             return List.of("confirm");
-        if (strings.length == 3 && strings[0].equalsIgnoreCase("edit"))
-            return MarkerUtils.markersMap.getOrDefault(strings[1], Collections.emptyList()).stream().map(Marker::getId).filter(k -> k.contains(strings[2])).toList();
-        if (strings.length == 3 && strings[0].equalsIgnoreCase("nearby"))
-            return Stream.of("10", "20", "30", "40", "50", "60", "70", "80", "90", "100").filter(string -> string.startsWith(strings[2])).toList();
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("i"))
-            return Stream.of("name", "icon", "desc", "pos", "confirm").filter(string -> string.startsWith(strings[1])).toList();
-        if (strings.length == 3 && strings[0].equalsIgnoreCase("i") && strings[1].equalsIgnoreCase("icon"))
-            return Pl3xMap.api().getIconRegistry().entrySet().stream().map(Map.Entry::getKey).filter(string -> string.contains(strings[2])).toList();
+        }
+        if (args.length == 3 && sub.equals("nearby")) {
+            return Stream.of("10", "20", "30", "40", "50", "60", "70", "80", "90", "100")
+                    .filter(string -> string.startsWith(args[2])).toList();
+        }
+        if (args.length == 2 && sub.equals("i")) {
+            return Stream.of("name", "icon", "desc", "pos", "confirm")
+                    .filter(string -> string.startsWith(args[1].toLowerCase())).toList();
+        }
+        if (args.length == 3 && sub.equals("i") && args[1].equalsIgnoreCase("icon")) {
+            return Pl3xMap.api().getIconRegistry().entrySet().stream()
+                    .map(Map.Entry::getKey).filter(string -> string.contains(args[2])).toList();
+        }
         return Collections.emptyList();
     }
 }
